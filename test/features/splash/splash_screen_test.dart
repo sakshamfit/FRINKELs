@@ -11,5 +11,8 @@ void main() {
     // Initial render check
     expect(find.text('FRINKELs'), findsOneWidget);
     expect(find.text('Everyone is a Professional'), findsOneWidget);
+
+    // Advance fake async timer to complete splash navigation and avoid pending timers
+    await tester.pump(const Duration(seconds: 3));
   });
 }
