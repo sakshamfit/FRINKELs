@@ -1,67 +1,66 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import '../theme/app_colors.dart';
+import '../theme/app_shadows.dart';
 
-/// GlassCard provides a modern 2026 frosted glass container with optional gradient borders & blur.
-class GlassCard extends StatelessWidget {
+class GlassCard extends StatefulWidget {
   final Widget child;
   final double borderRadius;
   final double blur;
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry? margin;
-  final VoidCallback? onTap;
-  final Color? backgroundColor;
-  final Color? borderColor;
-  final double borderWidth;
+  final EdgeInsets padding;
+  final bool interactive;
 
   const GlassCard({
     super.key,
     required this.child,
-    this.borderRadius = 20.0,
-    this.blur = 16.0,
-    this.padding = const EdgeInsets.all(20.0),
-    this.margin,
-    this.onTap,
-    this.backgroundColor,
-    this.borderColor,
-    this.borderWidth = 1.0,
+    this.borderRadius = 28,
+    this.blur = 12,
+    this.padding = const EdgeInsets.all(24),
+    this.interactive = true,
   });
 
   @override
+  State<GlassCard> createState() => _GlassCardState();
+}
+
+class _GlassCardState extends State<GlassCard> {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    Widget cardContent = ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return GestureDetector(
+      onTapDown: widget.interactive ? (_) => setState(() => _isPressed = true) : null,
+      onTapUp: widget.interactive ? (_) => setState(() => _isPressed = false) : null,
+      onTapCancel: widget.interactive ? () => setState(() => _isPressed = false) : null,
+      child: AnimatedScale(
+        scale: _isPressed ? 0.98 : 1.0,
+        duration: const Duration(milliseconds: 180),
         child: Container(
-          padding: padding,
           decoration: BoxDecoration(
-            color: backgroundColor ?? AppColors.glassBackground,
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: borderColor ?? AppColors.glassBorder,
-              width: borderWidth,
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            boxShadow: isDark ? AppShadows.premiumDark : AppShadows.premium,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: widget.blur, sigmaY: widget.blur),
+              child: Container(
+                padding: widget.padding,
+                decoration: BoxDecoration(
+                  color: isDark 
+                    ? AppColors.cardDark.withValues(alpha: 0.8) 
+                    : AppColors.cardLight.withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  border: isDark ? AppShadows.glassInsetBorderDark : AppShadows.glassInsetBorder,
+                ),
+                child: widget.child,
+              ),
             ),
           ),
-          child: child,
         ),
       ),
     );
-
-    if (margin != null) {
-      cardContent = Padding(padding: margin!, child: cardContent);
-    }
-
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(borderRadius),
-        splashColor: AppColors.glassBackgroundHover,
-        highlightColor: Colors.transparent,
-        child: cardContent,
-      );
-    }
-
-    return cardContent;
   }
 }

@@ -2,59 +2,62 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
-/// AppTypography defines the premium 2026 typography scale for FRINKELs using Outfit & Inter fonts.
+/// AppTypography implements the minimal, premium typography system for FRINKELs.
+/// Philosophy: Geist Sans (Inter fallback), Negative tracking on headlines.
 abstract class AppTypography {
-  static TextStyle displayLarge = GoogleFonts.outfit(
-    fontSize: 34,
-    fontWeight: FontWeight.bold,
-    color: AppColors.textPrimary,
-    letterSpacing: -0.8,
-  );
+  // Negative tracking for premium feel
+  static const double _headlineTracking = -1.2;
+  static const double _sectionTracking = -0.6;
+  static const double _cardTracking = -0.4;
 
-  static TextStyle displayMedium = GoogleFonts.outfit(
-    fontSize: 28,
+  static TextStyle title = GoogleFonts.inter(
+    fontSize: 40,
     fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
-    letterSpacing: -0.5,
+    letterSpacing: _headlineTracking,
+    height: 1.1,
   );
 
-  static TextStyle titleLarge = GoogleFonts.outfit(
-    fontSize: 22,
+  static TextStyle section = GoogleFonts.inter(
+    fontSize: 28,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    letterSpacing: _sectionTracking,
   );
 
-  static TextStyle titleMedium = GoogleFonts.outfit(
-    fontSize: 18,
+  static TextStyle cardTitle = GoogleFonts.inter(
+    fontSize: 20,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    letterSpacing: _cardTracking,
   );
 
-  static TextStyle bodyLarge = GoogleFonts.inter(
+  static TextStyle body = GoogleFonts.inter(
     fontSize: 16,
-    fontWeight: FontWeight.w400,
-    color: AppColors.textPrimary,
+    fontWeight: FontWeight.w500,
     height: 1.5,
   );
 
-  static TextStyle bodyMedium = GoogleFonts.inter(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.textSecondary,
-    height: 1.4,
-  );
-
-  static TextStyle labelLarge = GoogleFonts.outfit(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
-    letterSpacing: 0.5,
-  );
-
-  static TextStyle labelSmall = GoogleFonts.inter(
-    fontSize: 12,
+  static TextStyle caption = GoogleFonts.inter(
+    fontSize: 13,
     fontWeight: FontWeight.w500,
-    color: AppColors.textTertiary,
-    letterSpacing: 0.5,
   );
+
+  static TextStyle tiny = GoogleFonts.inter(
+    fontSize: 11,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// Get theme-aware text styles
+  static TextTheme getTextTheme(bool isDark) {
+    final baseColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
+    final secondaryColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+
+    return TextTheme(
+      displayLarge: title.copyWith(color: baseColor),
+      headlineMedium: section.copyWith(color: baseColor),
+      titleLarge: cardTitle.copyWith(color: baseColor),
+      bodyLarge: body.copyWith(color: baseColor),
+      bodyMedium: body.copyWith(color: baseColor, fontSize: 14),
+      labelMedium: caption.copyWith(color: secondaryColor),
+      labelSmall: tiny.copyWith(color: secondaryColor),
+    );
+  }
 }

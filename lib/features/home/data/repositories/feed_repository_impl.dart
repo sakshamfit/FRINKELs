@@ -1,0 +1,314 @@
+import 'package:dartz/dartz.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../core/failures/failure.dart';
+import '../../../auth/domain/entities/user.dart' as AppUser;
+import '../../domain/entities/post.dart';
+import '../../domain/entities/story.dart';
+import '../../domain/entities/business.dart';
+import '../../domain/entities/community.dart';
+import '../../domain/repositories/feed_repository.dart';
+
+class FeedRepositoryImpl implements FeedRepository {
+  final SupabaseClient _supabase;
+
+  FeedRepositoryImpl(this._supabase);
+
+  @override
+  Future<Either<Failure, List<Post>>> getFeed({int limit = 20, int offset = 0}) async {
+    try {
+      final response = await _supabase
+          .from('posts')
+          .select('*, profiles(full_name, avatar_url, profession)')
+          .order('created_at', ascending: false)
+          .range(offset, offset + limit - 1);
+
+      final List<dynamic> data = response as List<dynamic>;
+      final posts = data.map((json) {
+        final profile = json['profiles'];
+        return Post(
+          id: json['id'],
+          authorId: json['author_id'],
+          authorName: profile['full_name'] ?? 'Anonymous',
+          authorAvatarUrl: profile['avatar_url'],
+          authorProfession: profile['profession'],
+          content: json['content'] ?? '',
+          imageUrls: List<String>.from(json['image_urls'] ?? []),
+          type: PostType.values.firstWhere(
+            (e) => e.name == (json['type'] ?? 'text'),
+            orElse: () => PostType.text,
+          ),
+          likesCount: json['likes_count'] ?? 0,
+          commentsCount: json['comments_count'] ?? 0,
+          createdAt: DateTime.parse(json['created_at']),
+        );
+      }).toList();
+
+      return Right(posts);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<AppUser>>> getNearbyProfessionals() async {
+    try {
+      // Real implementation would use PostGIS or a specific RPC
+      final response = await _supabase
+          .from('profiles')
+          .select('*')
+          .eq('is_onboarded', true)
+          .limit(10);
+
+      final List<dynamic> data = response as List<dynamic>;
+      final users = data.map((json) => AppUser(
+        id: json['id'],
+        email: json['email'] ?? '',
+        name: json['full_name'],
+        username: json['username'],
+        profession: json['profession'],
+        avatarUrl: json['avatar_url'],
+        isOnboarded: true,
+        createdAt: DateTime.parse(json['created_at']),
+      )).toList();
+
+      return Right(users);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> likePost(String postId) async {
+    try {
+      // Supabase logic for liking a post (e.g. inserting into a 'likes' table)
+      await _supabase.from('post_likes').insert({
+        'post_id': postId,
+        'user_id': _supabase.auth.currentUser!.id,
+      });
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> bookmarkPost(String postId) async {
+    try {
+      await _supabase.from('post_bookmarks').insert({
+        'post_id': postId,
+        'user_id': _supabase.auth.currentUser!.id,
+      });
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Post>> createPost(String content, {List<String>? imageUrls, PostType type = PostType.text}) async {
+    try {
+      final userId = _supabase.auth.currentUser!.id;
+      final response = await _supabase.from('posts').insert({
+        'author_id': userId,
+        'content': content,
+        'image_urls': imageUrls ?? [],
+        'type': type.name,
+      }).select('*, profiles(full_name, avatar_url, profession)').single();
+
+      final profile = response['profiles'];
+      return Right(Post(
+        id: response['id'],
+        authorId: userId,
+        authorName: profile['full_name'] ?? 'Me',
+        authorAvatarUrl: profile['avatar_url'],
+        authorProfession: profile['profession'],
+        content: response['content'],
+        imageUrls: List<String>.from(response['image_urls'] ?? []),
+        type: type,
+        createdAt: DateTime.parse(response['created_at']),
+      ));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Story>>> getStories({String? userId}) async {
+    try {
+      final query = _supabase.from('stories').select('*, profiles(full_name, avatar_url)');
+
+      if (userId != null) {
+        query.eq('user_id', userId);
+      } else {
+        // Get recent stories from users we follow or nearby users
+        // For now, let's get recent stories from all users
+        query.order('created_at', ascending: false);
+      }
+
+      final response = await query.limit(20);
+
+      final List<dynamic> data = response as List<dynamic>;
+      final stories = data.map((json) {
+        final profile = json['profiles'];
+        return Story(
+          id: json['id'],
+          userId: json['user_id'],
+          userName: profile['full_name'] ?? 'Anonymous',
+          userAvatarUrl: profile['avatar_url'],
+          mediaUrl: json['media_url'],
+          caption: json['caption'],
+          type: StoryType.values.firstWhere(
+            (e) => e.name == (json['type'] ?? 'image'),
+            orElse: () => StoryType.image,
+          ),
+          createdAt: DateTime.parse(json['created_at']),
+          expiresAt: DateTime.parse(json['expires_at']),
+          isViewed: json['is_viewed'] ?? false,
+        );
+      }).toList();
+
+      return Right(stories);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Story>> createStory(String mediaUrl, {String? caption, StoryType type = StoryType.image}) async {
+    try {
+      final userId = _supabase.auth.currentUser!.id;
+      final expiresAt = DateTime.now().add(Duration(hours: 24)); // Stories expire in 24 hours
+
+      final response = await _supabase.from('stories').insert({
+        'user_id': userId,
+        'media_url': mediaUrl,
+        'caption': caption,
+        'type': type.name,
+        'created_at': DateTime.now().toIso8601String(),
+        'expires_at': expiresAt.toIso8601String(),
+      }).select('*, profiles(full_name, avatar_url)').single();
+
+      final profile = response['profiles'];
+      return Right(Story(
+        id: response['id'],
+        userId: userId,
+        userName: profile['full_name'] ?? 'Me',
+        userAvatarUrl: profile['avatar_url'],
+        mediaUrl: response['media_url'],
+        caption: response['caption'],
+        type: StoryType.values.firstWhere(
+          (e) => e.name == (response['type'] ?? 'image'),
+          orElse: () => StoryType.image,
+        ),
+        createdAt: DateTime.parse(response['created_at']),
+        expiresAt: DateTime.parse(response['expires_at']),
+        isViewed: false,
+      ));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> viewStory(String storyId) async {
+    try {
+      await _supabase.from('story_views').insert({
+        'story_id': storyId,
+        'user_id': _supabase.auth.currentUser!.id,
+        'viewed_at': DateTime.now().toIso8601String(),
+      });
+
+      // Also update the story to mark it as viewed by current user
+      await _supabase.from('stories').update({'is_viewed': true}).eq('id', storyId);
+
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Business>>> getBusinesses({String? category, double? minRating}) async {
+    try {
+      final query = _supabase.from('businesses').select('*, categories(name)');
+
+      if (category != null && category.isNotEmpty) {
+        query.eq('category', category);
+      }
+
+      if (minRating != null) {
+        query.gte('rating', minRating);
+      }
+
+      final response = await query.limit(20);
+
+      final List<dynamic> data = response as List<dynamic>;
+      final businesses = data.map((json) {
+        // Assuming categories is a separate table with a name field, we'll extract the category names
+        final categoriesData = json['categories'] as List<dynamic>?;
+        final List<String> categoryNames = categoriesData != null
+            ? categoriesData.map((c) => c['name'] as String).toList()
+            : [];
+
+        return Business(
+          id: json['id'],
+          name: json['name'],
+          description: json['description'] ?? '',
+          category: json['category'] ?? '',
+          address: json['address'] ?? '',
+          phone: json['phone'] ?? '',
+          website: json['website'] ?? '',
+          imageUrl: json['image_url'] ?? '',
+          coverImageUrl: json['cover_image_url'] ?? '',
+          rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+          reviewCount: json['review_count'] as int? ?? 0,
+          isOpen: json['is_open'] as bool? ?? false,
+          isVerified: json['is_verified'] as bool? ?? false,
+          categories: categoryNames,
+          createdAt: DateTime.parse(json['created_at']),
+        );
+      }).toList();
+
+      return Right(businesses);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Community>>> getCommunities({String? category, int? minMemberCount}) async {
+    try {
+      final query = _supabase.from('communities').select('*');
+
+      if (category != null && category.isNotEmpty) {
+        query.eq('category', category);
+      }
+
+      if (minMemberCount != null) {
+        query.gte('member_count', minMemberCount);
+      }
+
+      final response = await query.limit(20);
+
+      final List<dynamic> data = response as List<dynamic>;
+      final communities = data.map((json) {
+        return Community(
+          id: json['id'] as String,
+          name: json['name'] as String,
+          description: json['description'] as String,
+          category: json['category'] as String,
+          memberCount: json['member_count'] as int,
+          isVerified: json['is_verified'] as bool,
+          iconUrl: json['icon_url'] as String?,
+          bannerUrl: json['banner_url'] as String?,
+          createdAt: DateTime.parse(json['created_at']),
+        );
+      }).toList();
+
+      return Right(communities);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+}
+}

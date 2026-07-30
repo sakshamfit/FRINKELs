@@ -2,38 +2,51 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_typography.dart';
 
-/// AppTheme builds the ThemeData configured for 2026 Dark Mode First design system.
+/// AppTheme implements the premium, minimal design system for FRINKELs.
+/// Inspired by Apple, Linear, and Arc.
 abstract class AppTheme {
-  static ThemeData get darkTheme {
+  static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColors.backgroundDark,
-      colorScheme: const ColorScheme.dark(
-        primary: AppColors.primary,
-        secondary: AppColors.accentCyan,
-        surface: AppColors.surfaceElevated,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: AppColors.backgroundPrimary,
+      cardColor: AppColors.cardLight,
+      dividerColor: AppColors.dividerLight,
+      textTheme: AppTypography.getTextTheme(false),
+      colorScheme: const ColorScheme.light(
+        primary: AppColors.accent,
+        secondary: AppColors.accent,
+        surface: AppColors.cardLight,
         error: AppColors.error,
-        onPrimary: AppColors.textPrimary,
-        onSecondary: AppColors.backgroundDark,
-        onSurface: AppColors.textPrimary,
-        onError: AppColors.textPrimary,
-      ),
-      textTheme: TextTheme(
-        displayLarge: AppTypography.displayLarge,
-        displayMedium: AppTypography.displayMedium,
-        titleLarge: AppTypography.titleLarge,
-        titleMedium: AppTypography.titleMedium,
-        bodyLarge: AppTypography.bodyLarge,
-        bodyMedium: AppTypography.bodyMedium,
-        labelLarge: AppTypography.labelLarge,
-        labelSmall: AppTypography.labelSmall,
+        onPrimary: Colors.white,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        scrolledUnderElevation: 0,
+      ),
+    );
+  }
+
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: AppColors.backgroundDark,
+      cardColor: AppColors.cardDark,
+      dividerColor: AppColors.dividerDark,
+      textTheme: AppTypography.getTextTheme(true),
+      colorScheme: const ColorScheme.dark(
+        primary: AppColors.accent,
+        secondary: AppColors.accent,
+        surface: AppColors.cardDark,
+        error: AppColors.error,
+        onPrimary: Colors.white,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
       ),
     );
   }
