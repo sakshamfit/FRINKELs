@@ -45,6 +45,11 @@ abstract class AppTypography {
     fontWeight: FontWeight.w500,
   );
 
+  static TextStyle caption2 = GoogleFonts.inter(
+    fontSize: 10,
+    fontWeight: FontWeight.w400,
+  );
+
   /// Get theme-aware text styles
   static TextTheme getTextTheme(bool isDark) {
     final baseColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;

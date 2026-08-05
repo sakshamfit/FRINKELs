@@ -121,14 +121,14 @@ class MockUserRepository extends _i1.Mock implements _i3.UserRepository {
 
   @override
   _i4.Future<_i2.Either<_i5.Failure, _i6.User>> updateUserProfile(
-    String? displayName,
+    Map<String, dynamic>? data,
   ) =>
       (super.noSuchMethod(
-            Invocation.method(#updateUserProfile, [displayName]),
+            Invocation.method(#updateUserProfile, [data]),
             returnValue: _i4.Future<_i2.Either<_i5.Failure, _i6.User>>.value(
               _FakeEither_0<_i5.Failure, _i6.User>(
                 this,
-                Invocation.method(#updateUserProfile, [displayName]),
+                Invocation.method(#updateUserProfile, [data]),
               ),
             ),
           )

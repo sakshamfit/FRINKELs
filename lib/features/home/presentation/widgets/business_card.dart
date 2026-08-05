@@ -3,7 +3,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glass_card.dart';
-import '../../../domain/entities/business.dart';
+import '../../domain/entities/business.dart';
 
 class BusinessCard extends StatelessWidget {
   final Business business;
@@ -23,6 +23,7 @@ class BusinessCard extends StatelessWidget {
       onTap: onTap,
       child: GlassCard(
         width: 180,
+        padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -53,18 +54,18 @@ class BusinessCard extends StatelessWidget {
                             errorBuilder: (context, error, stackTrace) => Container(
                               color: isDark
                                   ? AppColors.cardDark.withValues(alpha: 0.2)
-                                  : AppColors.cardPrimary.withValues(alpha: 0.2),
+                                  : AppColors.cardLight.withValues(alpha: 0.2),
                               child: const Icon(
                                 LucideIcons.image,
                                 size: 32,
                                 color: Colors.white54,
                               ),
                             ),
-                          ),
+                          )
                         : Container(
                             color: isDark
                                 ? AppColors.cardDark.withValues(alpha: 0.2)
-                                : AppColors.cardPrimary.withValues(alpha: 0.2),
+                                : AppColors.cardLight.withValues(alpha: 0.2),
                             child: const Icon(
                               LucideIcons.image,
                               size: 32,
@@ -80,11 +81,11 @@ class BusinessCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: AppColors.verified,
+                          color: AppColors.accent,
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Icon(
-                          LucideIcons.check_circle,
+                          LucideIcons.circle_check,
                           size: 12,
                           color: Colors.white,
                         ),
@@ -138,7 +139,7 @@ class BusinessCard extends StatelessWidget {
                   // Rating and Category
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         LucideIcons.star,
                         size: 14,
                         color: Colors.amberAccent,
@@ -153,11 +154,14 @@ class BusinessCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        business.category,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: isDark ? Colors.white60 : Colors.black54,
+                      Expanded(
+                        child: Text(
+                          business.category,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: isDark ? Colors.white60 : Colors.black54,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -171,20 +175,20 @@ class BusinessCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: isDark
-                              ? AppColors.borderDark
-                              : AppColors.borderPrimary,
+                              ? AppColors.dividerDark
+                              : AppColors.dividerLight,
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
+                          Icon(
                             LucideIcons.user_plus,
                             size: 14,
                             color: AppColors.accent,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             'Follow',
                             style: TextStyle(

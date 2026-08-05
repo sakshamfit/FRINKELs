@@ -9,11 +9,11 @@ class UpdateUserProfile {
   UpdateUserProfile(this.repository);
 
   Future<Either<Failure, User>> call(UpdateUserProfileParams params) =>
-      repository.updateUserProfile(params.displayName);
+      repository.updateUserProfile(params.data);
 }
 
 class UpdateUserProfileParams {
-  final String displayName;
+  final Map<String, dynamic> data;
 
-  const UpdateUserProfileParams({required this.displayName});
+  const UpdateUserProfileParams({required this.data});
 }

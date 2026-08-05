@@ -9,6 +9,7 @@ import 'package:frinkels/features/auth/domain/usecases/sign_out.dart';
 import 'package:frinkels/features/auth/domain/usecases/reset_password.dart';
 import 'package:frinkels/features/auth/domain/usecases/get_current_user.dart';
 import 'package:frinkels/features/auth/domain/usecases/update_user_profile.dart';
+import 'package:frinkels/features/auth/domain/usecases/complete_onboarding.dart';
 import 'package:frinkels/features/auth/domain/entities/user.dart' as domain_user;
 import 'package:frinkels/features/auth/domain/repositories/user_repository.dart';
 import 'package:frinkels/core/failures/failure.dart';
@@ -50,20 +51,22 @@ class StubUserRepo implements UserRepository {
       Future.value(Right(domain_user.User(id: '1', email: 'test@test.com', name: 'Test User', createdAt: DateTime.now())));
 
   @override
-  Future<Either<Failure, domain_user.User>> updateUserProfile(String displayName) =>
-      Future.value(Right(domain_user.User(id: '1', email: 'test@test.com', name: displayName, createdAt: DateTime.now())));
+  Future<Either<Failure, domain_user.User>> updateUserProfile(Map<String, dynamic> data) =>
+      Future.value(Right(domain_user.User(id: '1', email: 'test@test.com', name: 'Test User', createdAt: DateTime.now())));
+
+  @override
+  Future<Either<Failure, domain_user.User>> completeOnboarding(Map<String, dynamic> data) =>
+      Future.value(Right(domain_user.User(id: '1', email: 'test@test.com', name: 'Test User', createdAt: DateTime.now())));
 }
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async {
-    // Mock SharedPreferences to avoid MissingPluginException
     final TestDefaultBinaryMessengerBinding binding = TestDefaultBinaryMessengerBinding.instance;
     final MethodChannel channel = MethodChannel('plugins.flutter.io/shared_preferences');
     final MethodChannel jsonChannel = MethodChannel('plugins.flutter.io/shared_preferences_macos');
 
-    // Set up method call handlers
     binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       if (methodCall.method == 'getAll') {
         return <String, dynamic>{};
@@ -96,11 +99,9 @@ void main() {
       return Future.value(null);
     });
 
-    // Initialize SharedPreferences instance
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
 
-    // Initialize Supabase with dummy values (will be overridden by provider if needed)
     await Supabase.initialize(
       url: 'https://test.supabase.co',
       publishableKey: 'test-anon-key',
@@ -109,23 +110,23 @@ void main() {
 
   testWidgets('SplashScreen displays FRINKELs title and tagline',
       (WidgetTester tester) async {
-    // Set a larger screen size to ensure all widgets are visible
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
 
+    final stubRepo = StubUserRepo();
+
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          // Override each use case provider to use our stub-based use cases
-          signUpUseCaseProvider.overrideWithValue(SignUp(StubUserRepo())),
-          signInUseCaseProvider.overrideWithValue(SignIn(StubUserRepo())),
-          signInWithGoogleUseCaseProvider.overrideWithValue(SignInWithGoogle(StubUserRepo())),
-          signOutUseCaseProvider.overrideWithValue(SignOut(StubUserRepo())),
-          resetPasswordUseCaseProvider.overrideWithValue(ResetPassword(StubUserRepo())),
-          getCurrentUserUseCaseProvider.overrideWithValue(GetCurrentUser(StubUserRepo())),
-          updateUserProfileUseCaseProvider.overrideWithValue(UpdateUserProfile(StubUserRepo())),
-          // Override authControllerProvider to return unauthenticated state
+          signUpUseCaseProvider.overrideWithValue(SignUp(stubRepo)),
+          signInUseCaseProvider.overrideWithValue(SignIn(stubRepo)),
+          signInWithGoogleUseCaseProvider.overrideWithValue(SignInWithGoogle(stubRepo)),
+          signOutUseCaseProvider.overrideWithValue(SignOut(stubRepo)),
+          resetPasswordUseCaseProvider.overrideWithValue(ResetPassword(stubRepo)),
+          getCurrentUserUseCaseProvider.overrideWithValue(GetCurrentUser(stubRepo)),
+          updateUserProfileUseCaseProvider.overrideWithValue(UpdateUserProfile(stubRepo)),
+          completeOnboardingUseCaseProvider.overrideWithValue(CompleteOnboarding(stubRepo)),
           authControllerProvider.overrideWith(
             (ref) => AuthController(
               signUpUseCase: ref.read(signUpUseCaseProvider),
@@ -135,6 +136,7 @@ void main() {
               resetPasswordUseCase: ref.read(resetPasswordUseCaseProvider),
               getCurrentUserUseCase: ref.read(getCurrentUserUseCaseProvider),
               updateUserProfileUseCase: ref.read(updateUserProfileUseCaseProvider),
+              completeOnboardingUseCase: ref.read(completeOnboardingUseCaseProvider),
             ),
           ),
         ],
@@ -152,12 +154,9 @@ void main() {
       ),
     );
 
-    // Initial render check
     expect(find.text('FRINKELs'), findsOneWidget);
     expect(find.text('Find. Connect. Grow.'), findsOneWidget);
 
-    // Wait for the splash screen animation and navigation to complete
-    // The splash screen has a 2800ms delay before navigating
     await tester.pumpAndSettle(const Duration(seconds: 5));
   });
 }

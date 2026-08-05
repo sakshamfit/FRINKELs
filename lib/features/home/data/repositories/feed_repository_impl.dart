@@ -1,11 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/failures/failure.dart';
-import '../../../auth/domain/entities/user.dart' as AppUser;
 import '../../domain/entities/post.dart';
 import '../../domain/entities/story.dart';
 import '../../domain/entities/business.dart';
 import '../../domain/entities/community.dart';
+import '../../../jobs/domain/entities/job.dart';
+import '../../domain/entities/local_news.dart';
+import '../../../auth/domain/entities/user.dart' as auth_user;
 import '../../domain/repositories/feed_repository.dart';
 
 class FeedRepositoryImpl implements FeedRepository {
@@ -50,24 +52,48 @@ class FeedRepositoryImpl implements FeedRepository {
   }
 
   @override
-  Future<Either<Failure, List<AppUser>>> getNearbyProfessionals() async {
+  Future<Either<Failure, List<auth_user.User>>> getNearbyProfessionals() async {
     try {
-      // Real implementation would use PostGIS or a specific RPC
+      // Real implementation would use PostGIS or a specific RPC for location-based filtering
+      // For now, we're getting onboarded users as a placeholder for "nearby"
       final response = await _supabase
           .from('profiles')
-          .select('*')
+          .select('''
+            id,
+            email,
+            full_name,
+            username,
+            profession,
+            skills,
+            interests,
+            bio,
+            location,
+            availability,
+            avatar_url,
+            cover_url,
+            email_verified,
+            is_onboarded,
+            created_at
+          ''')
           .eq('is_onboarded', true)
           .limit(10);
 
       final List<dynamic> data = response as List<dynamic>;
-      final users = data.map((json) => AppUser(
+      final users = data.map((json) => auth_user.User(
         id: json['id'],
         email: json['email'] ?? '',
         name: json['full_name'],
         username: json['username'],
         profession: json['profession'],
+        skills: List<String>.from(json['skills'] ?? []),
+        interests: List<String>.from(json['interests'] ?? []),
+        bio: json['bio'] ?? '',
+        location: json['location'] ?? '',
+        availability: json['availability'] ?? '',
         avatarUrl: json['avatar_url'],
-        isOnboarded: true,
+        coverUrl: json['cover_url'],
+        emailVerified: json['email_verified'] ?? false,
+        isOnboarded: json['is_onboarded'] ?? false,
         createdAt: DateTime.parse(json['created_at']),
       )).toList();
 
@@ -156,7 +182,6 @@ class FeedRepositoryImpl implements FeedRepository {
           userName: profile['full_name'] ?? 'Anonymous',
           userAvatarUrl: profile['avatar_url'],
           mediaUrl: json['media_url'],
-          caption: json['caption'],
           type: StoryType.values.firstWhere(
             (e) => e.name == (json['type'] ?? 'image'),
             orElse: () => StoryType.image,
@@ -195,7 +220,6 @@ class FeedRepositoryImpl implements FeedRepository {
         userName: profile['full_name'] ?? 'Me',
         userAvatarUrl: profile['avatar_url'],
         mediaUrl: response['media_url'],
-        caption: response['caption'],
         type: StoryType.values.firstWhere(
           (e) => e.name == (response['type'] ?? 'image'),
           orElse: () => StoryType.image,
@@ -310,5 +334,83 @@ class FeedRepositoryImpl implements FeedRepository {
       return Left(ServerFailure(message: e.toString()));
     }
   }
-}
+
+  @override
+  Future<Either<Failure, List<Job>>> getJobs({String? category, double? minSalary}) async {
+    try {
+      final query = _supabase.from('jobs').select('*');
+
+      if (category != null && category.isNotEmpty) {
+        // Assuming category is stored in a 'job_type' or similar field
+        // Adjust based on your actual database schema
+        query.eq('type', category);
+      }
+
+      if (minSalary != null) {
+        // This is simplified - in reality you'd want to parse the salary string
+        // For now we'll assume salary is stored as a numeric value or we'll filter in Dart
+        query.gte('salary_min', minSalary.toString());
+      }
+
+      final response = await query.limit(20);
+
+      final List<dynamic> data = response as List<dynamic>;
+      final jobs = data.map((json) {
+        return Job(
+          id: json['id'] as String,
+          title: json['title'] as String,
+          companyName: json['company_name'] as String,
+          companyLogoUrl: json['company_logo_url'] as String?,
+          description: json['description'] as String,
+          location: json['location'] as String,
+          salary: json['salary'] as String,
+          type: json['type'] as String,
+          postedById: json['posted_by_id'] as String,
+          status: JobStatus.fromString(json['status'] as String?),
+          createdAt: DateTime.parse(json['created_at']),
+        );
+      }).toList();
+
+      return Right(jobs);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LocalNews>>> getLocalNews({String? category, String? location}) async {
+    try {
+      final query = _supabase.from('local_news').select('*');
+
+      if (category != null && category.isNotEmpty) {
+        query.eq('category', category);
+      }
+
+      if (location != null && location.isNotEmpty) {
+        query.eq('location', location);
+      }
+
+      final response = await query.limit(20).order('published_at', ascending: false);
+
+      final List<dynamic> data = response as List<dynamic>;
+      final newsItems = data.map((json) {
+        return LocalNews(
+          id: json['id'] as String,
+          title: json['title'] as String,
+          description: json['description'] ?? '',
+          imageUrl: json['image_url'] as String?,
+          source: json['source'] as String?,
+          author: json['author'] as String?,
+          category: json['category'] as String?,
+          location: json['location'] as String?,
+          publishedAt: DateTime.parse(json['published_at']),
+          isTrending: json['is_trending'] as bool? ?? false,
+        );
+      }).toList();
+
+      return Right(newsItems);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
 }

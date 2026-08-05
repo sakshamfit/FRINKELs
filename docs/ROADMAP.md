@@ -190,3 +190,9 @@ All items on this roadmap align with our core vision to [restate vision statemen
 - **Value Delivery**: Impact of released features on key metrics (DAU, retention, engagement)
 - **Stakeholder Satisfaction**: Feedback from internal and external stakeholders (Target: 4.5/5)
 - **Quality**: Defect rates and production incident rates (Target: <1% crash rate)
+
+# Launch Screen Assets
+
+You can customize the launch screen with your own desired assets by replacing the image files in this directory.
+
+You can also do it by opening your Flutter project's Xcode project with `open ios/Runner.xcworkspace`, selecting `Runner/Assets.xcassets` in the Project Navigator and dropping in the desired images.

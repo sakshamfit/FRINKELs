@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/api/api_config.dart';
 import '../../domain/entities/business.dart';
 import '../../domain/repositories/feed_repository.dart';
+import 'home_provider.dart';
 
 final businessesProvider = StateNotifierProvider<BusinessesNotifier, AsyncValue<List<Business>>>((ref) {
   return BusinessesNotifier(ref.read(feedRepositoryProvider));

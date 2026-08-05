@@ -1,5 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../entities/job.dart';
+import '../../domain/entities/job.dart';
 
 abstract class JobRemoteDataSource {
   Future<List<Job>> getJobs({int limit = 20, int offset = 0});
@@ -31,7 +31,7 @@ class SupabaseJobRemoteDataSource implements JobRemoteDataSource {
       salary: json['salary'],
       type: json['type'],
       postedById: json['posted_by_id'],
-      status: JobStatus.values.firstWhere((e) => e.name == json['status']),
+      status: JobStatus.fromString(json['status']),
       createdAt: DateTime.parse(json['created_at']),
     )).toList();
   }
@@ -60,7 +60,7 @@ class SupabaseJobRemoteDataSource implements JobRemoteDataSource {
       salary: response['salary'],
       type: response['type'],
       postedById: response['posted_by_id'],
-      status: JobStatus.values.firstWhere((e) => e.name == response['status']),
+      status: JobStatus.fromString(response['status']),
       createdAt: DateTime.parse(response['created_at']),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +19,9 @@ import '../../features/auth/domain/entities/user.dart' as auth_user;
 class AppRouter {
   static const String splashPath = '/splash';
   static const String onboardingPath = '/onboarding';
+  static const String authPath = '/auth';
+  static const String loginPath = '/auth/login';
+  static const String signupPath = '/auth/signup';
   static const String homePath = '/';
   static const String searchPath = '/search';
   static const String postPath = '/post';
@@ -27,7 +29,8 @@ class AppRouter {
   static const String chatPath = '/chat';
   static const String profilePath = '/profile';
 
-  static final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> _rootNavigatorKey =
+      GlobalKey<NavigatorState>();
 
   static GoRouter create(Ref ref) {
     final authController = ref.read(authControllerProvider);
@@ -39,20 +42,25 @@ class AppRouter {
         final authState = ref.read(authControllerProvider).state;
         final loggedIn = authState.isAuthenticated;
         final isOnboarded = authState.user?.isOnboarded ?? false;
-        
+
+        debugPrint('ROUTER: Redirect check - path: ${state.uri.path}, loggedIn: $loggedIn, isOnboarded: $isOnboarded');
+
         final isAuthPath = state.uri.path.startsWith('/auth');
         final isSplashPath = state.uri.path == splashPath;
         final isOnboardingPath = state.uri.path == onboardingPath;
 
         if (loggedIn) {
           if (!isOnboarded && !isOnboardingPath) {
+            debugPrint('ROUTER: Redirecting to onboarding');
             return onboardingPath;
           }
           if (isAuthPath || isSplashPath) {
+            debugPrint('ROUTER: Redirecting to home');
             return homePath;
           }
         } else {
           if (!isAuthPath && !isSplashPath) {
+            debugPrint('ROUTER: Redirecting to login');
             return '/auth/login';
           }
         }

@@ -1,6 +1,25 @@
 import 'package:equatable/equatable.dart';
 
-enum JobStatus { open, closed, cancelled, completed }
+/// Job lifecycle states — must stay in sync with `public.job_status`
+/// PostgreSQL enum (see supabase/migrations/20260804000100_enums.sql).
+enum JobStatus {
+  draft,
+  open,
+  filled,
+  completed,
+  cancelled,
+  closed;
+
+  /// Convert a Postgres enum label (e.g. `'open'`) into a [JobStatus].
+  /// Falls back to [JobStatus.open] if the label is unknown.
+  static JobStatus fromString(String? value) {
+    if (value == null) return JobStatus.open;
+    for (final s in JobStatus.values) {
+      if (s.name == value) return s;
+    }
+    return JobStatus.open;
+  }
+}
 
 class Job extends Equatable {
   final String id;

@@ -4,13 +4,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/theme/app_padding.dart';
 import '../../../../core/theme/app_shadows.dart';
 import '../../../../core/widgets/glass_card.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../auth/presentation/controllers/auth_provider.dart';
 import '../../../auth/domain/entities/user.dart';
-import '../controllers/home_provider.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   final String? userId;
@@ -24,30 +22,30 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
-    // If widget.userId is null, we show the current user's profile
+
     final currentUser = ref.watch(authControllerProvider).state.user;
-    
+
     if (widget.userId == null && currentUser != null) {
       return _buildProfileView(context, isDark, currentUser, isMe: true);
     }
 
-    // Otherwise, fetch profile by ID
-    // For now, if it's the current user's ID, just show current user
     if (widget.userId == currentUser?.id) {
-       return _buildProfileView(context, isDark, currentUser!, isMe: true);
+      return _buildProfileView(context, isDark, currentUser!, isMe: true);
     }
 
-    // In a real app, we would use a FutureProvider to fetch the profile
-    // final profileAsync = ref.watch(profileProvider(widget.userId!));
-    // return profileAsync.when(...);
-    
     return const Scaffold(body: Center(child: Text('Loading profile...')));
   }
 
-  Widget _buildProfileView(BuildContext context, bool isDark, User user, {required bool isMe}) {
+  Widget _buildProfileView(
+    BuildContext context,
+    bool isDark,
+    User user, {
+    required bool isMe,
+  }) {
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -83,13 +81,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            user.coverUrl != null 
-              ? Image.network(user.coverUrl!, fit: BoxFit.cover)
-              : Container(color: AppColors.cardDark),
+            user.coverUrl != null
+                ? Image.network(user.coverUrl!, fit: BoxFit.cover)
+                : Container(color: AppColors.cardDark),
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.black.withValues(alpha: 0.8), Colors.transparent],
+                  colors: [
+                    Colors.black.withValues(alpha: 0.8),
+                    Colors.transparent,
+                  ],
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                 ),
@@ -118,34 +119,46 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             height: 120,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: isDark ? Colors.black : Colors.white, width: 4),
+              border: Border.all(
+                color: isDark ? Colors.black : Colors.white,
+                width: 4,
+              ),
               boxShadow: AppShadows.premium,
-              image: user.avatarUrl != null 
-                ? DecorationImage(image: NetworkImage(user.avatarUrl!), fit: BoxFit.cover)
-                : null,
+              image: user.avatarUrl != null
+                  ? DecorationImage(
+                      image: NetworkImage(user.avatarUrl!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
-            child: user.avatarUrl == null 
-              ? const Icon(LucideIcons.user, size: 48) 
-              : null,
+            child: user.avatarUrl == null
+                ? const Icon(LucideIcons.user, size: 48)
+                : null,
           ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                user.name ?? 'Professional', 
-                style: AppTypography.section.copyWith(fontSize: 32)
+                user.name ?? 'Professional',
+                style: AppTypography.section.copyWith(fontSize: 32),
               ),
               const SizedBox(width: 8),
               if (user.emailVerified)
-                const Icon(LucideIcons.check_circle_2, color: AppColors.accent, size: 24),
+                const Icon(
+                  LucideIcons.circle_check,
+                  color: AppColors.accent,
+                  size: 24,
+                ),
             ],
           ),
           const SizedBox(height: 8),
           Text(
             user.profession ?? 'Lead Design Architect',
             style: AppTypography.body.copyWith(
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 24),
@@ -183,7 +196,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget _buildStatItem(String label, String value) {
     return Column(
       children: [
-        Text(value, style: AppTypography.cardTitle.copyWith(fontSize: 22, fontWeight: FontWeight.w700)),
+        Text(
+          value,
+          style: AppTypography.cardTitle.copyWith(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         const SizedBox(height: 4),
         Text(label, style: AppTypography.tiny),
       ],
@@ -199,9 +218,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           Text('About', style: AppTypography.cardTitle),
           const SizedBox(height: 16),
           Text(
-            user.bio ?? 'Building the future of professional networking at FRINKELs. Passionate about minimal design and clean code.',
+            user.bio ??
+                'Building the future of professional networking at FRINKELs. Passionate about minimal design and clean code.',
             style: AppTypography.body.copyWith(
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondary,
             ),
           ),
         ],
@@ -210,7 +232,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildSkills(bool isDark, User user) {
-    final skills = user.skills.isNotEmpty ? user.skills : ['UI Design', 'Flutter', 'Firebase', 'Supabase', 'Architecture'];
+    final skills = user.skills.isNotEmpty
+        ? user.skills
+        : ['UI Design', 'Flutter', 'Firebase', 'Supabase', 'Architecture'];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -221,15 +245,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: skills.map((skill) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.cardDark : AppColors.cardLight,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: isDark ? Colors.white10 : Colors.black10),
-              ),
-              child: Text(skill, style: AppTypography.tiny),
-            )).toList(),
+            children: skills
+                .map(
+                  (skill) => Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.cardDark : AppColors.cardLight,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1),
+                      ),
+                    ),
+                    child: Text(skill, style: AppTypography.tiny),
+                  ),
+                )
+                .toList(),
           ),
         ],
       ),
@@ -259,23 +292,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           crossAxisSpacing: 16,
           childAspectRatio: 1.0,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            return GlassCard(
-              padding: EdgeInsets.zero,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28),
-                  image: DecorationImage(
-                    image: NetworkImage('https://picsum.photos/400/400?random=$index'),
-                    fit: BoxFit.cover,
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return GlassCard(
+            padding: EdgeInsets.zero,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    'https://picsum.photos/400/400?random=$index',
                   ),
+                  fit: BoxFit.cover,
                 ),
               ),
-            );
-          },
-          childCount: 8,
-        ),
+            ),
+          );
+        }, childCount: 8),
       ),
     );
   }

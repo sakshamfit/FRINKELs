@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/theme/app_padding.dart';
-import '../../../../core/theme/app_shadows.dart';
 import '../../../../core/widgets/glass_card.dart';
 import '../../../../core/widgets/glass_text_field.dart';
 import '../../../auth/presentation/controllers/auth_provider.dart';
@@ -14,6 +11,8 @@ import '../controllers/home_provider.dart';
 import '../widgets/post_card.dart';
 import '../widgets/businesses_section.dart';
 import '../widgets/communities_section.dart';
+import '../widgets/jobs_section.dart';
+import '../widgets/local_news_section.dart';
 import '../widgets/stories_section.dart';
 import '../../domain/entities/post.dart';
 
@@ -65,7 +64,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     _buildSectionHeader('Communities', isDark),
                     const SizedBox(height: 16),
                     const CommunitiesSection(),
-                    const SizedBox(height: 48),
+                    const SizedBox(height: 24),
+                    _buildSectionHeader('Jobs', isDark),
+                    const SizedBox(height: 16),
+                    const JobsSection(),
+                    const SizedBox(height: 24),
+                    _buildSectionHeader('Local News', isDark),
+                    const SizedBox(height: 16),
+                    const LocalNewsSection(),
+                    const SizedBox(height: 24),
                     _buildSectionHeader('Nearby Professionals', isDark),
                     const SizedBox(height: 16),
                     _buildNearbyProfessionals(isDark),

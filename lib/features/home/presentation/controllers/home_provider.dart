@@ -4,9 +4,6 @@ import '../../../auth/domain/entities/user.dart';
 import '../../data/repositories/feed_repository_impl.dart';
 import '../../domain/entities/post.dart';
 import '../../domain/repositories/feed_repository.dart';
-import '../controllers/businesses_provider.dart';
-import '../controllers/communities_provider.dart';
-import '../controllers/stories_provider.dart';
 
 final feedRepositoryProvider = Provider<FeedRepository>((ref) {
   final supabase = ref.read(supabaseProvider);
@@ -15,18 +12,6 @@ final feedRepositoryProvider = Provider<FeedRepository>((ref) {
 
 final feedProvider = StateNotifierProvider<FeedNotifier, AsyncValue<List<Post>>>((ref) {
   return FeedNotifier(ref.read(feedRepositoryProvider));
-});
-
-final storiesProvider = StateNotifierProvider<StoriesNotifier, AsyncValue<List<Story>>>((ref) {
-  return StoriesNotifier(ref.read(feedRepositoryProvider));
-});
-
-final businessesProvider = StateNotifierProvider<BusinessesNotifier, AsyncValue<List<Business>>>((ref) {
-  return BusinessesNotifier(ref.read(feedRepositoryProvider));
-});
-
-final communitiesProvider = StateNotifierProvider<CommunitiesNotifier, AsyncValue<List<Community>>>((ref) {
-  return CommunitiesNotifier(ref.read(feedRepositoryProvider));
 });
 
 class FeedNotifier extends StateNotifier<AsyncValue<List<Post>>> {

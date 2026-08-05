@@ -1,87 +1,110 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../auth/presentation/controllers/auth_provider.dart';
-import '../../../home/domain/entities/post.dart';
 import '../../../auth/domain/entities/user.dart';
+import '../../../home/domain/entities/post.dart';
 import '../../../jobs/domain/entities/job.dart';
+import '../../domain/repositories/search_repository.dart';
+import '../../data/repositories/search_repository_impl.dart';
+import '../../data/datasources/search_remote_data_source.dart';
+import '../../../auth/presentation/controllers/auth_provider.dart';
+
+// Provider for the search repository
+final searchRepositoryProvider = Provider<SearchRepository>((ref) {
+  final supabase = ref.watch(supabaseProvider);
+  return SearchRepositoryImpl(
+    SupabaseSearchRemoteDataSource(supabase),
+  );
+});
+
+// Provider for the search notifier
+final searchProvider = StateNotifierProvider<SearchNotifier, AsyncValue<SearchResult>>((ref) {
+  return SearchNotifier(ref.watch(searchRepositoryProvider));
+});
 
 class SearchResult {
   final List<User> users;
   final List<Post> posts;
   final List<Job> jobs;
 
-  SearchResult({this.users = const [], this.posts = const [], this.jobs = const []});
+  const SearchResult({
+    this.users = const [],
+    this.posts = const [],
+    this.jobs = const [],
+  });
+
+  SearchResult copyWith({
+    List<User>? users,
+    List<Post>? posts,
+    List<Job>? jobs,
+  }) {
+    return SearchResult(
+      users: users ?? this.users,
+      posts: posts ?? this.posts,
+      jobs: jobs ?? this.jobs,
+    );
+  }
 }
 
-final searchProvider = StateNotifierProvider<SearchNotifier, AsyncValue<SearchResult>>((ref) {
-  return SearchNotifier(ref);
-});
-
 class SearchNotifier extends StateNotifier<AsyncValue<SearchResult>> {
-  final Ref _ref;
+  final SearchRepository _searchRepository;
 
-  SearchNotifier(this._ref) : super(const AsyncValue.data(SearchResult())) {
-    // Should be initialized with empty data or recent searches
+  SearchNotifier(this._searchRepository) : super(const AsyncValue.data(SearchResult())) {
+    // Could load recent searches here if needed
   }
 
   Future<void> search(String query) async {
     if (query.isEmpty) {
-      state = AsyncValue.data(SearchResult());
+      state = const AsyncValue.data(SearchResult());
       return;
     }
 
     state = const AsyncValue.loading();
 
     try {
-      final supabase = _ref.read(supabaseProvider);
-      
-      // Parallel searches in Supabase
+      // Execute searches in parallel
       final results = await Future.wait([
-        supabase.from('profiles').select().ilike('full_name', '%$query%').limit(5),
-        supabase.from('posts').select('*, profiles(full_name, avatar_url)').ilike('content', '%$query%').limit(5),
-        supabase.from('jobs').select().ilike('title', '%$query%').limit(5),
+        _searchRepository.searchUsers(query),
+        _searchRepository.searchPosts(query),
+        _searchRepository.searchJobs(query),
       ]);
 
-      final List<dynamic> usersData = results[0] as List<dynamic>;
-      final List<dynamic> postsData = results[1] as List<dynamic>;
-      final List<dynamic> jobsData = results[2] as List<dynamic>;
+      final users = results[0].fold((l) => <User>[], (r) => r as List<User>);
+      final posts = results[1].fold((l) => <Post>[], (r) => r as List<Post>);
+      final jobs = results[2].fold((l) => <Job>[], (r) => r as List<Job>);
 
       state = AsyncValue.data(SearchResult(
-        users: usersData.map((u) => User(
-          id: u['id'],
-          email: u['email'] ?? '',
-          name: u['full_name'],
-          username: u['username'],
-          profession: u['profession'],
-          avatarUrl: u['avatar_url'],
-          isOnboarded: true,
-          createdAt: DateTime.parse(u['created_at']),
-        )).toList(),
-        posts: postsData.map((p) {
-          final profile = p['profiles'];
-          return Post(
-            id: p['id'],
-            authorId: p['author_id'],
-            authorName: profile['full_name'] ?? 'Anonymous',
-            authorAvatarUrl: profile['avatar_url'],
-            content: p['content'] ?? '',
-            imageUrls: List<String>.from(p['image_urls'] ?? []),
-            createdAt: DateTime.parse(p['created_at']),
-          );
-        }).toList(),
-        jobs: jobsData.map((j) => Job(
-          id: j['id'],
-          title: j['title'],
-          companyName: j['company_name'],
-          description: j['description'],
-          location: j['location'],
-          salary: j['salary'],
-          type: j['type'],
-          postedById: j['posted_by_id'],
-          createdAt: DateTime.parse(j['created_at']),
-        )).toList(),
+        users: users,
+        posts: posts,
+        jobs: jobs,
       ));
     } catch (e) {
       state = AsyncValue.error(e.toString(), StackTrace.current);
     }
+  }
+
+  // Additional search methods
+  Future<void> searchProfessionals(String query) async {
+    // Implementation would go here
+  }
+
+  Future<void> searchNearbyProfessionals({
+    required String query,
+    double? latitude,
+    double? longitude,
+    double radiusKm = 10,
+  }) async {
+    // Implementation would go here
+  }
+
+  Future<List<String>> getRecentSearches(String userId) async {
+    // Implementation would go here
+    return [];
+  }
+
+  Future<void> saveSearch(String userId, String query) async {
+    // Implementation would go here
+  }
+
+  Future<void> clearSearchHistory(String userId) async {
+    // Implementation would go here
   }
 }

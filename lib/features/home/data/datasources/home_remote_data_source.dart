@@ -1,5 +1,6 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import '../../domain/entities/post.dart';
+import '../../../auth/domain/entities/user.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<Post>> getFeed({int limit = 20, int offset = 0});
@@ -19,22 +20,22 @@ class SupabaseHomeRemoteDataSource implements HomeRemoteDataSource {
 
   SupabaseHomeRemoteDataSource(this.supabaseClient);
 
-  User _mapSbUserToUser(Map<String, dynamic> metadata, String id, String email, String createdAt, {DateTime? emailConfirmedAt}) {
+  User _mapSbUserToUser(Map<String, dynamic> data, String id, String email, String createdAt, {DateTime? emailConfirmedAt}) {
     return User(
       id: id,
       email: email,
-      name: metadata['full_name'] as String?,
-      username: metadata['username'] as String?,
-      profession: metadata['profession'] as String?,
-      skills: (metadata['skills'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      interests: (metadata['interests'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      bio: metadata['bio'] as String?,
-      location: metadata['location'] as String?,
-      availability: metadata['availability'] as String?,
-      avatarUrl: metadata['avatar_url'] as String?,
-      coverUrl: metadata['cover_url'] as String?,
-      emailVerified: emailConfirmedAt != null,
-      isOnboarded: metadata['is_onboarded'] as bool? ?? false,
+      name: data['full_name'] as String?,
+      username: data['username'] as String?,
+      profession: data['profession'] as String?,
+      skills: (data['skills'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      interests: (data['interests'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      bio: data['bio'] as String?,
+      location: data['location'] as String?,
+      availability: data['availability'] as String?,
+      avatarUrl: data['avatar_url'] as String?,
+      coverUrl: data['cover_url'] as String?,
+      emailVerified: emailConfirmedAt != null || (data['email_verified'] as bool? ?? false),
+      isOnboarded: data['is_onboarded'] as bool? ?? false,
       createdAt: DateTime.parse(createdAt),
     );
   }
@@ -47,15 +48,11 @@ class SupabaseHomeRemoteDataSource implements HomeRemoteDataSource {
         .eq('id', userId)
         .single();
     
-    // Profiles table might have different structure than auth metadata
-    // but we aim to keep them in sync via triggers.
     return _mapSbUserToUser(response, response['id'], response['email'] ?? '', response['created_at']);
   }
 
   @override
   Future<List<User>> getNearbyProfessionals({double? latitude, double? longitude, double radiusKm = 10}) async {
-    // This would ideally use a PostGIS RPC function in Supabase
-    // For now, let's just fetch all onboarded professionals
     final response = await supabaseClient
         .from('profiles')
         .select('*')
@@ -83,7 +80,7 @@ class SupabaseHomeRemoteDataSource implements HomeRemoteDataSource {
   Future<List<Post>> getFeed({int limit = 20, int offset = 0}) async {
     final response = await supabaseClient
         .from('posts')
-        .select('*, profiles(full_name, avatar_url), likes:likes(count), bookmarks:bookmarks(count)')
+        .select('*, profiles(full_name, avatar_url)')
         .order('created_at', ascending: false)
         .range(offset, offset + limit - 1);
 
@@ -97,10 +94,6 @@ class SupabaseHomeRemoteDataSource implements HomeRemoteDataSource {
         authorAvatarUrl: profile['avatar_url'] as String?,
         content: post['content'] as String,
         imageUrls: (post['image_urls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-        likesCount: (post['likes'] as List<dynamic>).isNotEmpty ? post['likes'][0]['count'] as int : 0,
-        commentsCount: post['comments_count'] as int? ?? 0,
-        isLiked: false, // Would need a join with current user
-        isBookmarked: false, // Would need a join with current user
         createdAt: DateTime.parse(post['created_at'] as String),
       );
     }).toList();

@@ -283,12 +283,12 @@ void main() {
 
       // act
       final result = await useCase.call(
-        const UpdateUserProfileParams(displayName: 'Updated Name'),
+        const UpdateUserProfileParams(data: {'full_name': 'Updated Name'}),
       );
 
       // assert
       expect(result, equals(Right<Failure, User>(testUser)));
-      verify(mockRepository.updateUserProfile('Updated Name'));
+      verify(mockRepository.updateUserProfile({'full_name': 'Updated Name'}));
     });
 
     test('should return Failure when updateUserProfile fails', () async {
@@ -299,12 +299,12 @@ void main() {
 
       // act
       final result = await useCase.call(
-        const UpdateUserProfileParams(displayName: 'Updated Name'),
+        const UpdateUserProfileParams(data: {'full_name': 'Updated Name'}),
       );
 
       // assert
       expect(result, isA<Left<Failure, User>>());
-      verify(mockRepository.updateUserProfile('Updated Name'));
+      verify(mockRepository.updateUserProfile({'full_name': 'Updated Name'}));
     });
   });
 }

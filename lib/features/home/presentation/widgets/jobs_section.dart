@@ -1,202 +1,160 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/glass_card.dart';
+import '../controllers/jobs_provider.dart';
+import '../widgets/job_card.dart';
 
-class JobsSection extends StatelessWidget {
+class JobsSection extends ConsumerWidget {
   const JobsSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Jobs',
-                  style: AppTypography.cardTitle.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final jobsAsync = ref.watch(jobsProvider);
+
+    return jobsAsync.when(
+      data: (jobs) {
+        if (jobs.isEmpty) {
+          return _buildEmptyState(isDark);
+        }
+
+        return SizedBox(
+          height: 140,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            itemCount: jobs.length,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            itemBuilder: (context, index) {
+              final job = jobs[index];
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: JobCard(
+                  job: job,
+                  onTap: () {
+                    // TODO: Navigate to job detail screen
+                  },
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'See All',
-                    style: TextStyle(color: Colors.cyanAccent, fontSize: 14),
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
           ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 120,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              children: const [
-                _JobItem(
-                  title: 'Senior Flutter Developer',
-                  company: 'TechInnovate Inc.',
-                  location: 'Remote',
-                  salary: '\$120K-150K',
-                  tags: ['Flutter', 'Dart', 'Remote'],
-                ),
-                _JobItem(
-                  title: 'UI/UX Designer',
-                  company: 'DesignCraft Studio',
-                  location: 'San Francisco, CA',
-                  salary: '\$90K-110K',
-                  tags: ['UI/UX', 'Figma', 'Prototyping'],
-                ),
-                _JobItem(
-                  title: 'Backend Engineer',
-                  company: 'CloudScale Solutions',
-                  location: 'New York, NY',
-                  salary: '\$110K-140K',
-                  tags: ['Node.js', 'AWS', 'SQL'],
-                ),
-                _JobItem(
-                  title: 'Product Manager',
-                  company: 'StartupLaunch Partners',
-                  location: 'Austin, TX',
-                  salary: '\$100K-130K',
-                  tags: ['Product', 'Strategy', 'Analytics'],
-                ),
-                _JobItem(
-                  title: 'DevOps Engineer',
-                  company: 'InfraTech Systems',
-                  location: 'Seattle, WA',
-                  salary: '\$115K-145K',
-                  tags: ['DevOps', 'Kubernetes', 'AWS'],
-                ),
-                _JobItem(
-                  title: 'Data Scientist',
-                  company: 'AI Innovations Lab',
-                  location: 'Boston, MA',
-                  salary: '\$130K-160K',
-                  tags: ['Python', 'Machine Learning', 'Statistics'],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.05, end: 0);
+      },
+      loading: () => _buildLoadingState(isDark),
+      error: (error, stackTrace) => _buildErrorState(isDark, error.toString(), ref),
     );
   }
-}
 
-class _JobItem extends StatelessWidget {
-  final String title;
-  final String company;
-  final String location;
-  final String salary;
-  final List<String> tags;
-
-  const _JobItem({
-    required this.title,
-    required this.company,
-    required this.location,
-    required this.salary,
-    required this.tags,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 240,
-      margin: const EdgeInsets.only(right: 16),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  company,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
+  Widget _buildLoadingState(bool isDark) {
+    return SizedBox(
+      height: 140,
+      child: Center(
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: 3,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: SizedBox(
+              width: 120,
+              child: GlassCard(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.location_on, size: 14, color: Colors.white60),
-                    const SizedBox(width: 4),
-                    Text(
-                      location,
-                      style: TextStyle(fontSize: 12, color: Colors.white60),
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isDark
+                            ? AppColors.cardDark.withValues(alpha: 0.2)
+                            : AppColors.cardLight.withValues(alpha: 0.2),
+                      ),
+                      child: const Icon(
+                        LucideIcons.briefcase,
+                        size: 20,
+                        color: Colors.white54,
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    Icon(
-                      Icons.attach_money,
-                      size: 14,
-                      color: Colors.greenAccent,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      salary,
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Loading...',
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white70,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 4,
-                  children: tags
-                      .map(
-                        (tag) => Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            tag,
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.lightBlueAccent,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
+              ),
             ),
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(bool isDark, String error, WidgetRef ref) {
+    return SizedBox(
+      height: 140,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              LucideIcons.cloud_off,
+              size: 24,
+              color: AppColors.error,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Failed to load jobs',
+              style: AppTypography.body.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 4),
+            TextButton.icon(
+              onPressed: () {
+                ref.read(jobsProvider.notifier).loadJobs();
+              },
+              icon: const Icon(LucideIcons.refresh_cw, size: 16),
+              label: Text(
+                'Retry',
+                style: AppTypography.caption.copyWith(color: AppColors.accent),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(bool isDark) {
+    return SizedBox(
+      height: 140,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              LucideIcons.briefcase,
+              size: 24,
+              color: AppColors.textSecondary,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'No jobs found',
+              style: AppTypography.body.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

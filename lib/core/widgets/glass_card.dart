@@ -9,6 +9,8 @@ class GlassCard extends StatefulWidget {
   final double blur;
   final EdgeInsets padding;
   final bool interactive;
+  final double? width;
+  final double? height;
 
   const GlassCard({
     super.key,
@@ -17,6 +19,8 @@ class GlassCard extends StatefulWidget {
     this.blur = 12,
     this.padding = const EdgeInsets.all(24),
     this.interactive = true,
+    this.width,
+    this.height,
   });
 
   @override
@@ -38,6 +42,8 @@ class _GlassCardState extends State<GlassCard> {
         scale: _isPressed ? 0.98 : 1.0,
         duration: const Duration(milliseconds: 180),
         child: Container(
+          width: widget.width,
+          height: widget.height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(widget.borderRadius),
             boxShadow: isDark ? AppShadows.premiumDark : AppShadows.premium,

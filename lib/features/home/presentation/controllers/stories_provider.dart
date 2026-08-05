@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../auth/presentation/controllers/auth_provider.dart';
 import '../../domain/entities/story.dart';
 import '../../domain/repositories/feed_repository.dart';
+import 'home_provider.dart';
 
 class StoriesState {
   final bool isLoading;
@@ -29,9 +29,8 @@ class StoriesState {
 
 class StoriesNotifier extends StateNotifier<StoriesState> {
   final FeedRepository _repository;
-  final Ref _ref;
 
-  StoriesNotifier(this._repository, this._ref) : super(const StoriesState()) {
+  StoriesNotifier(this._repository) : super(const StoriesState()) {
     loadStories();
   }
 
@@ -63,5 +62,5 @@ class StoriesNotifier extends StateNotifier<StoriesState> {
 }
 
 final storiesProvider = StateNotifierProvider<StoriesNotifier, StoriesState>((ref) {
-  return StoriesNotifier(ref.read(feedRepositoryProvider), ref);
+  return StoriesNotifier(ref.read(feedRepositoryProvider));
 });
