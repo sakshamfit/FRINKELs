@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/failures/failure.dart';
+import 'dart:async';
 import '../../domain/entities/post.dart';
 import '../../domain/entities/story.dart';
 import '../../domain/entities/business.dart';
@@ -48,6 +49,55 @@ class FeedRepositoryImpl implements FeedRepository {
       return Right(posts);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Stream<Either<Failure, List<Post>>> getFeedStream({int limit = 20}) async* {
+    try {
+      final userId = _supabase.auth.currentUser?.id;
+      if (userId == null) {
+        yield Left(AuthenticationFailure(message: 'User not authenticated'));
+        return;
+      }
+
+      // Stream posts ordered by creation date (newest first)
+      // We'll handle limiting in memory for simplicity, similar to chat implementation
+      final stream = _supabase
+          .from('posts')
+          .stream(primaryKey: ['id'])
+          .order('created_at', ascending: false);
+
+      await for (final data in stream) {
+        // Convert raw data to Post entities
+        final posts = data
+            .map((json) {
+              final profile = json['profiles'] as Map<String, dynamic>?;
+              return Post(
+                id: json['id'] as String,
+                authorId: json['author_id'] as String,
+                authorName: (profile?['full_name'] as String?) ?? 'Anonymous',
+                authorAvatarUrl: profile?['avatar_url'] as String?,
+                authorProfession: profile?['profession'] as String?,
+                content: json['content'] as String? ?? '',
+                imageUrls: List<String>.from(json['image_urls'] ?? []),
+                type: PostType.values.firstWhere(
+                  (e) => e.name == (json['type'] as String?),
+                  orElse: () => PostType.text,
+                ),
+                likesCount: (json['likes_count'] as int?) ?? 0,
+                commentsCount: (json['comments_count'] as int?) ?? 0,
+                createdAt: DateTime.parse(json['created_at'] as String),
+              );
+            })
+            .toList();
+
+        // Apply limit (take most recent posts)
+        final limitedPosts = posts.take(limit).toList();
+        yield Right(limitedPosts);
+      }
+    } catch (e) {
+      yield Left(ServerFailure(message: e.toString()));
     }
   }
 

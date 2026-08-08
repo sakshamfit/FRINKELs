@@ -98,7 +98,7 @@ class AuthController extends ChangeNotifier {
             coverUrl: metadata['cover_url'] as String?,
             emailVerified: sbUser.emailConfirmedAt != null,
             isOnboarded: metadata['is_onboarded'] as bool? ?? false,
-            createdAt: DateTime.parse(sbUser.createdAt),
+            createdAt: sbUser.createdAt != null ? DateTime.parse(sbUser.createdAt) : DateTime.now(),
           ),
         );
       } else {
@@ -321,6 +321,7 @@ class AuthController extends ChangeNotifier {
         ),
         (user) => _state = _state.copyWith(
           isLoading: false,
+          isAuthenticated: true,
           user: user,
         ),
       );

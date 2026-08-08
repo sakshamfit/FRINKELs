@@ -10,9 +10,6 @@
 
     For more details:
     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
   -->
   <base href="$FLUTTER_BASE_HREF">
 
@@ -29,14 +26,21 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>frinkels</title>
-  <link rel="manifest" href="manifest.json">
-
   <!-- Supabase Config -->
   <meta name="supabase-url" content="https://qwllshdzcssqetgxmirc.supabase.co">
   <meta name="supabase-anon-key" content="sb_publishable_XFFvxculR68Mx4JKTNuEaQ_dnoFjeFB">
-</head>
-<body>
+
+  <!-- Firebase Config -->
+  <meta name="firebase:apiKey" content="AAAA">
+  <meta name="firebase:authDomain" content="frinkels.firebaseapp.com">
+  <meta name="firebase:projectId" content="frinkels">
+  <meta name="firebase:storageBucket" content="frinkels.appspot.com">
+  <meta name="firebase:messagingSenderId" content="1234567890">
+  <meta name="firebase:appId" content="1:1234567890:web:abcdefghijklmnopqrstuvwxyz">
+
+  <title>frinkels</title>
+  <link rel="manifest" href="manifest.json">
+
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader
@@ -46,5 +50,17 @@
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
   <script src="flutter_bootstrap.js" async></script>
+</head>
+<body>
+  <!--
+    The flutter script is named after the project so that different projects can
+    coexist on the same page without conflicting.
+
+    The _flutter.loader.sh file is used to select the correct version of the
+    Flutter engine based on the channel and version specified in the
+    flutter_manifest.json file. The loader also handles running the app in
+    release mode by extracting the kernel binary from the snapshot data and
+    running the isolate with the appropriate VM flags.
+  -->
 </body>
 </html>

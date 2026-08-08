@@ -41,7 +41,7 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
       coverUrl: metadata['cover_url'] as String?,
       emailVerified: user.emailConfirmedAt != null,
       isOnboarded: metadata['is_onboarded'] as bool? ?? false,
-      createdAt: DateTime.parse(user.createdAt),
+      createdAt: user.createdAt != null ? DateTime.parse(user.createdAt) : DateTime.now(),
     );
   }
 

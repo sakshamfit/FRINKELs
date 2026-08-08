@@ -10,6 +10,7 @@ import '../entities/local_news.dart';
 
 abstract class FeedRepository {
   Future<Either<Failure, List<Post>>> getFeed({int limit = 20, int offset = 0});
+  Stream<Either<Failure, List<Post>>> getFeedStream({int limit = 20});
   Future<Either<Failure, List<User>>> getNearbyProfessionals();
   Future<Either<Failure, List<Story>>> getStories({String? userId});
   Future<Either<Failure, List<Business>>> getBusinesses({String? category, double? minRating});

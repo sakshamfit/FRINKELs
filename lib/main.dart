@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 // import 'dart:html' hide Platform; // Removed to allow native compilation
 
 import 'core/theme/app_theme.dart';
+import 'core/services/supabase_service.dart';
 import 'features/auth/presentation/controllers/auth_provider.dart';
 
 Future<void> main() async {
@@ -37,11 +38,11 @@ Future<void> main() async {
   } else {
     // For desktop/mobile, use environment variables if still empty
     if (supabaseUrl.isEmpty) {
-      supabaseUrl = Platform.environment['SUPABASE_URL'] ?? 
+      supabaseUrl = Platform.environment['SUPABASE_URL'] ??
                     Platform.environment['NEXT_PUBLIC_SUPABASE_URL'] ?? '';
     }
     if (supabaseAnonKey.isEmpty) {
-      supabaseAnonKey = Platform.environment['SUPABASE_ANON_KEY'] ?? 
+      supabaseAnonKey = Platform.environment['SUPABASE_ANON_KEY'] ??
                         Platform.environment['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'] ?? '';
     }
   }
@@ -54,10 +55,9 @@ Future<void> main() async {
     supabaseAnonKey = 'sb_publishable_XFFvxculR68Mx4JKTNuEaQ_dnoFjeFB';
   }
 
-  await Supabase.initialize(
-    url: supabaseUrl,
-    publishableKey: supabaseAnonKey,
-  );
+  // Initialize Supabase service
+  final supabaseService = SupabaseService();
+  await supabaseService.initialize(supabaseUrl, supabaseAnonKey);
 
   runApp(const ProviderScope(child: FrinkelsApp()));
 }

@@ -13,6 +13,8 @@ import '../../features/chat/presentation/screens/chat_screen.dart';
 import '../../features/home/presentation/screens/profile_screen.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
+import '../../features/documentation/presentation/screens/documentation_screen.dart';
+import '../../features/documentation/presentation/widgets/documentation_detail.dart';
 import '../widgets/main_layout.dart';
 import '../../features/auth/domain/entities/user.dart' as auth_user;
 
@@ -28,6 +30,8 @@ class AppRouter {
   static const String messagesPath = '/messages';
   static const String chatPath = '/chat';
   static const String profilePath = '/profile';
+  static const String documentationPath = '/documentation';
+  static const String documentationDetailPath = '/documentation/:id';
 
   static final GlobalKey<NavigatorState> _rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -84,6 +88,14 @@ class AppRouter {
         GoRoute(
           path: '/auth/signup',
           builder: (context, state) => const SignupScreen(),
+        ),
+        GoRoute(
+          path: documentationPath,
+          builder: (context, state) => const DocumentationScreen(),
+        ),
+        GoRoute(
+          path: documentationDetailPath,
+          builder: (context, state) => const DocumentationDetail(),
         ),
         GoRoute(
           path: chatPath,

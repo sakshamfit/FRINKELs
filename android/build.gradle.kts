@@ -56,19 +56,18 @@ subprojects {
             }
         }
     }
+}
 
-    tasks.withType<JavaCompile>().configureEach {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
+tasks.withType<JavaCompile>().configureEach {
+    sourceCompatibility = "17"
+    targetCompatibility = "17"
+}
 
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            languageVersion = "1.8"
-            apiVersion = "1.8"
-            jvmTarget = "17"
-            freeCompilerArgs = freeCompilerArgs + listOf("-Xskip-metadata-version-check")
-        }
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        languageVersion = "1.8"
+        apiVersion = "1.8"
+        jvmTarget = "17"
     }
 }
 

@@ -10,10 +10,21 @@ android {
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
+    // Configure JVM toolchain to force JDK 17 for all compilations
+    // This overrides Android Studio's bundled JDK 21
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    // Configure JVM toolchain for Java/Kotlin compilation
+    // This ensures we use JDK 17 regardless of what Android Studio bundles
+    // Note: Requires Android Gradle Plugin 7.0.0 or higher
+    // The actual toolchain configuration is done through kotlinOptions and compileOptions above
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).

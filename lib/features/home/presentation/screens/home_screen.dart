@@ -7,6 +7,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/glass_card.dart';
 import '../../../../core/widgets/glass_text_field.dart';
 import '../../../auth/presentation/controllers/auth_provider.dart';
+import '../../../auth/domain/entities/user.dart' as auth_user;
 import '../controllers/home_provider.dart';
 import '../widgets/post_card.dart';
 import '../widgets/businesses_section.dart';
@@ -35,7 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
       body: RefreshIndicator(
-        onRefresh: () => ref.read(feedProvider.notifier).getFeed(),
+        onRefresh: () => ref.read(feedProvider.notifier).refreshFeed(),
         color: AppColors.accent,
         backgroundColor: isDark ? AppColors.cardDark : Colors.white,
         child: CustomScrollView(
