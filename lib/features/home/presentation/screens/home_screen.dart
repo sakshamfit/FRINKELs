@@ -7,7 +7,6 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/glass_card.dart';
 import '../../../../core/widgets/glass_text_field.dart';
 import '../../../auth/presentation/controllers/auth_provider.dart';
-import '../../../auth/domain/entities/user.dart' as auth_user;
 import '../controllers/home_provider.dart';
 import '../widgets/post_card.dart';
 import '../widgets/businesses_section.dart';
@@ -34,7 +33,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final feedState = ref.watch(feedProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       body: RefreshIndicator(
         onRefresh: () => ref.read(feedProvider.notifier).refreshFeed(),
         color: AppColors.accent,
@@ -61,7 +62,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     _buildSectionHeader('Businesses', isDark),
                     const SizedBox(height: 16),
                     const BusinessesSection(),
-                    const SizedBox(height: 24), // Added space before Communities
+                    const SizedBox(
+                      height: 24,
+                    ), // Added space before Communities
                     _buildSectionHeader('Communities', isDark),
                     const SizedBox(height: 16),
                     const CommunitiesSection(),
@@ -96,7 +99,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return SliverAppBar(
       floating: true,
       pinned: false,
-      backgroundColor: (isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary).withValues(alpha: 0.8),
+      backgroundColor:
+          (isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary)
+              .withValues(alpha: 0.8),
       elevation: 0,
       centerTitle: false,
       title: GlassTextField(
@@ -124,7 +129,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           style: AppTypography.section.copyWith(
             fontSize: 18,
             fontWeight: FontWeight.w500,
-            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondary,
           ),
         ),
         Text(
@@ -159,7 +166,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildActionCard(String label, IconData icon, Color color, bool isDark) {
+  Widget _buildActionCard(
+    String label,
+    IconData icon,
+    Color color,
+    bool isDark,
+  ) {
     return GlassCard(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -174,7 +186,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Icon(icon, color: color, size: 24),
           ),
           const SizedBox(height: 16),
-          Text(label, style: AppTypography.body.copyWith(fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: AppTypography.body.copyWith(fontWeight: FontWeight.w600),
+          ),
         ],
       ),
     );
@@ -185,12 +200,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          title, 
-          style: AppTypography.section.copyWith(fontSize: 20, fontWeight: FontWeight.w700)
+          title,
+          style: AppTypography.section.copyWith(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         Text(
-          'See all', 
-          style: AppTypography.caption.copyWith(color: AppColors.accent, fontWeight: FontWeight.w600)
+          'See all',
+          style: AppTypography.caption.copyWith(
+            color: AppColors.accent,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ],
     );
@@ -202,7 +223,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildNearbyProfessionals(bool isDark) {
     final nearbyAsync = ref.watch(nearbyProfessionalsProvider);
-    
+
     return SizedBox(
       height: 180,
       child: nearbyAsync.when(
@@ -222,17 +243,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: [
                     CircleAvatar(
                       radius: 32,
-                      backgroundImage: pro.avatarUrl != null ? NetworkImage(pro.avatarUrl!) : null,
-                      child: pro.avatarUrl == null ? const Icon(LucideIcons.user) : null,
+                      backgroundImage: pro.avatarUrl != null
+                          ? NetworkImage(pro.avatarUrl!)
+                          : null,
+                      child: pro.avatarUrl == null
+                          ? const Icon(LucideIcons.user)
+                          : null,
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      pro.name ?? 'Pro', 
-                      style: AppTypography.body.copyWith(fontSize: 14, fontWeight: FontWeight.w700),
+                      pro.name ?? 'Pro',
+                      style: AppTypography.body.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Text(pro.profession ?? 'Specialist', style: AppTypography.tiny),
+                    Text(
+                      pro.profession ?? 'Specialist',
+                      style: AppTypography.tiny,
+                    ),
                   ],
                 ),
               ),
@@ -254,14 +285,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
       loading: () => const SliverToBoxAdapter(
-        child: Center(child: Padding(
-          padding: EdgeInsets.all(48.0),
-          child: CircularProgressIndicator(),
-        )),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(48.0),
+            child: CircularProgressIndicator(),
+          ),
+        ),
       ),
-      error: (e, _) => SliverToBoxAdapter(
-        child: Center(child: Text('Failed to load feed')),
-      ),
+      error: (e, _) =>
+          SliverToBoxAdapter(child: Center(child: Text('Failed to load feed'))),
     );
   }
 }

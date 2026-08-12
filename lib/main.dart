@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'dart:io';
@@ -16,7 +15,7 @@ Future<void> main() async {
 
   try {
     await Firebase.initializeApp(
-      options: FirebaseOptions.currentPlatform,
+      options: DefaultFirebaseOptions.currentPlatform,
     );
   } catch (e) {
     debugPrint('Firebase initialization failed: $e');
@@ -30,7 +29,9 @@ Future<void> main() async {
     supabaseUrl = const String.fromEnvironment('NEXT_PUBLIC_SUPABASE_URL');
   }
   if (supabaseAnonKey.isEmpty) {
-    supabaseAnonKey = const String.fromEnvironment('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY');
+    supabaseAnonKey = const String.fromEnvironment(
+      'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY',
+    );
   }
 
   // Try to get values from environment (for desktop/mobile)
@@ -41,12 +42,16 @@ Future<void> main() async {
   } else {
     // For desktop/mobile, use environment variables if still empty
     if (supabaseUrl.isEmpty) {
-      supabaseUrl = Platform.environment['SUPABASE_URL'] ??
-                    Platform.environment['NEXT_PUBLIC_SUPABASE_URL'] ?? '';
+      supabaseUrl =
+          Platform.environment['SUPABASE_URL'] ??
+          Platform.environment['NEXT_PUBLIC_SUPABASE_URL'] ??
+          '';
     }
     if (supabaseAnonKey.isEmpty) {
-      supabaseAnonKey = Platform.environment['SUPABASE_ANON_KEY'] ??
-                        Platform.environment['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'] ?? '';
+      supabaseAnonKey =
+          Platform.environment['SUPABASE_ANON_KEY'] ??
+          Platform.environment['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'] ??
+          '';
     }
   }
 

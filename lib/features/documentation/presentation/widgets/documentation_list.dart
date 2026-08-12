@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/documentation.dart';
 
 class DocumentationList extends ConsumerWidget {
@@ -34,10 +34,7 @@ class DocumentationList extends ConsumerWidget {
             leading: const Icon(Icons.description, color: AppColors.primary),
             title: Text(
               doc.title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             subtitle: Text(
               doc.category,

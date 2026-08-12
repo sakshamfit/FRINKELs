@@ -9,9 +9,10 @@ class SupabaseService {
     return _instance;
   }
 
-  late final supabaseClient;
+  late final SupabaseClient supabaseClient;
 
   Future<void> initialize(String url, String anonKey) async {
-    supabaseClient = await Supabase.initialize(url: url, publishableKey: anonKey);
+    await Supabase.initialize(url: url, publishableKey: anonKey);
+    supabaseClient = Supabase.instance.client;
   }
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_theme.dart';
 import '../../presentation/controllers/documentation_provider.dart';
 import '../../presentation/widgets/documentation_list.dart';
-import '../../presentation/widgets/documentation_detail.dart';
 
 class DocumentationScreen extends ConsumerWidget {
   static const String routeName = '/documentation';
@@ -27,12 +25,10 @@ class DocumentationScreen extends ConsumerWidget {
       ),
       body: documentationState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) =>
-            Center(child: Text('Error: $error')),
+        error: (error, stackTrace) => Center(child: Text('Error: $error')),
         data: (documentation) => DocumentationList(
           documentation: documentation,
-          onTap: (doc) => GoRouter.of(context)
-              .push('/documentation/${doc.id}'),
+          onTap: (doc) => GoRouter.of(context).push('/documentation/${doc.id}'),
         ),
       ),
       floatingActionButton: FloatingActionButton(

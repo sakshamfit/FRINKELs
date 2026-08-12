@@ -1,26 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/failures/failure.dart';
 import '../../domain/entities/documentation.dart';
 import '../../domain/repositories/documentation_repository.dart';
 import '../../domain/usecases/get_all_documentation.dart';
 import '../../domain/usecases/get_documentation.dart';
 import '../../domain/usecases/search_documentation.dart';
-import '../repositories/documentation_repository_impl.dart';
+import '../../data/repositories/documentation_repository_impl.dart';
 
 // StateNotifier for documentation state
-class DocumentationStateNotifier extends StateNotifier<AsyncValue<List<Documentation>>> {
+class DocumentationStateNotifier
+    extends StateNotifier<AsyncValue<List<Documentation>>> {
   final GetAllDocumentation _getAllDocumentation;
   final GetDocumentation _getDocumentation;
   final SearchDocumentation _searchDocumentation;
 
   DocumentationStateNotifier({
-    required GetAllDocumentation getAllDocumentation,
-    required GetDocumentation getDocumentation,
-    required SearchDocumentation searchDocumentation,
-  })  : _getAllDocumentation = getAllDocumentation,
-        _getDocumentation = getDocumentation,
-        _searchDocumentation = searchDocumentation,
-        super(const AsyncValue.loading());
+    required this._getAllDocumentation,
+    required this._getDocumentation,
+    required this._searchDocumentation,
+  }) : super(const AsyncValue.loading());
 
   Future<void> loadAllDocumentation({
     String? category,
@@ -46,10 +43,7 @@ class DocumentationStateNotifier extends StateNotifier<AsyncValue<List<Documenta
     );
   }
 
-  Future<void> searchDocumentation(
-    String query, {
-    String? category,
-  }) async {
+  Future<void> searchDocumentation(String query, {String? category}) async {
     state = const AsyncValue.loading();
     final result = await _searchDocumentation.call(query, category: category);
     state = result.fold(
@@ -60,7 +54,9 @@ class DocumentationStateNotifier extends StateNotifier<AsyncValue<List<Documenta
 }
 
 // Provider for the repository
-final documentationRepositoryProvider = Provider<DocumentationRepository>((ref) {
+final documentationRepositoryProvider = Provider<DocumentationRepository>((
+  ref,
+) {
   return DocumentationRepositoryImpl();
 });
 
@@ -82,10 +78,13 @@ final searchDocumentationProvider = Provider<SearchDocumentation>((ref) {
 
 // Provider for the state notifier
 final documentationStateNotifierProvider =
-    StateNotifierProvider<DocumentationStateNotifier, AsyncValue<List<Documentation>>>((ref) {
-  return DocumentationStateNotifier(
-    getAllDocumentation: ref.read(getAllDocumentationProvider),
-    getDocumentation: ref.read(getDocumentationProvider),
-    searchDocumentation: ref.read(searchDocumentationProvider),
-  );
-});
+    StateNotifierProvider<
+      DocumentationStateNotifier,
+      AsyncValue<List<Documentation>>
+    >((ref) {
+      return DocumentationStateNotifier(
+        getAllDocumentation: ref.read(getAllDocumentationProvider),
+        getDocumentation: ref.read(getDocumentationProvider),
+        searchDocumentation: ref.read(searchDocumentationProvider),
+      );
+    });

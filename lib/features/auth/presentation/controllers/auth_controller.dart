@@ -75,40 +75,45 @@ class AuthController extends ChangeNotifier {
   }) {
     _authStateSubscription = Supabase.instance.client.auth.onAuthStateChange
         .listen((data) {
-      final session = data.session;
-      final sbUser = session?.user; // Renamed to avoid conflict
+          final session = data.session;
+          final sbUser = session?.user; // Renamed to avoid conflict
 
-      // Update our state based on Supabase session
-      if (sbUser != null) {
-        final metadata = sbUser.userMetadata ?? {};
-        _state = _state.copyWith(
-          isAuthenticated: true,
-          user: User(
-            id: sbUser.id,
-            email: sbUser.email ?? '',
-            name: metadata['full_name'] as String?,
-            username: metadata['username'] as String?,
-            profession: metadata['profession'] as String?,
-            skills: (metadata['skills'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-            interests: (metadata['interests'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-            bio: metadata['bio'] as String?,
-            location: metadata['location'] as String?,
-            availability: metadata['availability'] as String?,
-            avatarUrl: metadata['avatar_url'] as String?,
-            coverUrl: metadata['cover_url'] as String?,
-            emailVerified: sbUser.emailConfirmedAt != null,
-            isOnboarded: metadata['is_onboarded'] as bool? ?? false,
-            createdAt: sbUser.createdAt != null ? DateTime.parse(sbUser.createdAt) : DateTime.now(),
-          ),
-        );
-      } else {
-        _state = _state.copyWith(
-          isAuthenticated: false,
-          user: null,
-        );
-      }
-      notifyListeners();
-    });
+          // Update our state based on Supabase session
+          if (sbUser != null) {
+            final metadata = sbUser.userMetadata ?? {};
+            _state = _state.copyWith(
+              isAuthenticated: true,
+              user: User(
+                id: sbUser.id,
+                email: sbUser.email ?? '',
+                name: metadata['full_name'] as String?,
+                username: metadata['username'] as String?,
+                profession: metadata['profession'] as String?,
+                skills:
+                    (metadata['skills'] as List<dynamic>?)
+                        ?.map((e) => e.toString())
+                        .toList() ??
+                    [],
+                interests:
+                    (metadata['interests'] as List<dynamic>?)
+                        ?.map((e) => e.toString())
+                        .toList() ??
+                    [],
+                bio: metadata['bio'] as String?,
+                location: metadata['location'] as String?,
+                availability: metadata['availability'] as String?,
+                avatarUrl: metadata['avatar_url'] as String?,
+                coverUrl: metadata['cover_url'] as String?,
+                emailVerified: sbUser.emailConfirmedAt != null,
+                isOnboarded: metadata['is_onboarded'] as bool? ?? false,
+                createdAt: DateTime.parse(sbUser.createdAt),
+              ),
+            );
+          } else {
+            _state = _state.copyWith(isAuthenticated: false, user: null);
+          }
+          notifyListeners();
+        });
   }
 
   @override
@@ -287,7 +292,9 @@ class AuthController extends ChangeNotifier {
     _state = _state.copyWith(isLoading: true, errorMessage: null);
     notifyListeners();
     try {
-      final result = await updateUserProfileUseCase.call(UpdateUserProfileParams(data: data));
+      final result = await updateUserProfileUseCase.call(
+        UpdateUserProfileParams(data: data),
+      );
       result.fold(
         (failure) => _state = _state.copyWith(
           isLoading: false,
