@@ -35,7 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -43,30 +45,33 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const PremiumLogo(size: 72, hasGlow: true)
-                    .animate()
-                    .scale(duration: 500.ms, curve: Curves.easeOutBack),
-                
+                const PremiumLogo(
+                  size: 72,
+                  hasGlow: true,
+                ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
+
                 const SizedBox(height: 48),
-                
+
                 Text(
                   'Welcome back',
                   style: AppTypography.title.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimary,
                   ),
                   textAlign: TextAlign.center,
                 ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1, end: 0),
-                
+
                 const SizedBox(height: 48),
-                
+
                 _LoginForm(
                   formKey: _formKey,
                   emailController: _emailController,
                   passwordController: _passwordController,
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 TextButton(
                   onPressed: () => context.go('${AppRouter.authPath}/signup'),
                   child: Text(
@@ -113,9 +118,9 @@ class _LoginForm extends ConsumerWidget {
             prefixIcon: const Icon(LucideIcons.mail),
             keyboardType: TextInputType.emailAddress,
           ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1, end: 0),
-          
+
           const SizedBox(height: 16),
-          
+
           GlassTextField(
             controller: passwordController,
             labelText: 'Password',
@@ -123,22 +128,25 @@ class _LoginForm extends ConsumerWidget {
             isPassword: true,
             prefixIcon: const Icon(LucideIcons.lock),
           ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.1, end: 0),
-          
+
           const SizedBox(height: 12),
-          
+
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              onPressed: () => context.go('${AppRouter.authPath}/reset-password'),
+              onPressed: () =>
+                  context.go('${AppRouter.authPath}/reset-password'),
               child: Text(
                 'Forgot password?',
-                style: AppTypography.tiny.copyWith(color: AppColors.textSecondary),
+                style: AppTypography.tiny.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
             ),
           ).animate().fadeIn(delay: 600.ms),
-          
+
           const SizedBox(height: 32),
-          
+
           FrinkelsButton.primary(
             width: double.infinity,
             text: 'Sign In',
@@ -152,9 +160,9 @@ class _LoginForm extends ConsumerWidget {
               }
             },
           ).animate().fadeIn(delay: 700.ms),
-          
+
           const SizedBox(height: 16),
-          
+
           FrinkelsButton.outline(
             width: double.infinity,
             text: 'Continue with Google',

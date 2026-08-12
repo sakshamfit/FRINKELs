@@ -17,7 +17,10 @@ class FeedRepositoryImpl implements FeedRepository {
   FeedRepositoryImpl(this._supabase);
 
   @override
-  Future<Either<Failure, List<Post>>> getFeed({int limit = 20, int offset = 0}) async {
+  Future<Either<Failure, List<Post>>> getFeed({
+    int limit = 20,
+    int offset = 0,
+  }) async {
     try {
       final response = await _supabase
           .from('posts')
@@ -70,27 +73,25 @@ class FeedRepositoryImpl implements FeedRepository {
 
       await for (final data in stream) {
         // Convert raw data to Post entities
-        final posts = data
-            .map((json) {
-              final profile = json['profiles'] as Map<String, dynamic>?;
-              return Post(
-                id: json['id'] as String,
-                authorId: json['author_id'] as String,
-                authorName: (profile?['full_name'] as String?) ?? 'Anonymous',
-                authorAvatarUrl: profile?['avatar_url'] as String?,
-                authorProfession: profile?['profession'] as String?,
-                content: json['content'] as String? ?? '',
-                imageUrls: List<String>.from(json['image_urls'] ?? []),
-                type: PostType.values.firstWhere(
-                  (e) => e.name == (json['type'] as String?),
-                  orElse: () => PostType.text,
-                ),
-                likesCount: (json['likes_count'] as int?) ?? 0,
-                commentsCount: (json['comments_count'] as int?) ?? 0,
-                createdAt: DateTime.parse(json['created_at'] as String),
-              );
-            })
-            .toList();
+        final posts = data.map((json) {
+          final profile = json['profiles'] as Map<String, dynamic>?;
+          return Post(
+            id: json['id'] as String,
+            authorId: json['author_id'] as String,
+            authorName: (profile?['full_name'] as String?) ?? 'Anonymous',
+            authorAvatarUrl: profile?['avatar_url'] as String?,
+            authorProfession: profile?['profession'] as String?,
+            content: json['content'] as String? ?? '',
+            imageUrls: List<String>.from(json['image_urls'] ?? []),
+            type: PostType.values.firstWhere(
+              (e) => e.name == (json['type'] as String?),
+              orElse: () => PostType.text,
+            ),
+            likesCount: (json['likes_count'] as int?) ?? 0,
+            commentsCount: (json['comments_count'] as int?) ?? 0,
+            createdAt: DateTime.parse(json['created_at'] as String),
+          );
+        }).toList();
 
         // Apply limit (take most recent posts)
         final limitedPosts = posts.take(limit).toList();
@@ -129,23 +130,27 @@ class FeedRepositoryImpl implements FeedRepository {
           .limit(10);
 
       final List<dynamic> data = response as List<dynamic>;
-      final users = data.map((json) => auth_user.User(
-        id: json['id'],
-        email: json['email'] ?? '',
-        name: json['full_name'],
-        username: json['username'],
-        profession: json['profession'],
-        skills: List<String>.from(json['skills'] ?? []),
-        interests: List<String>.from(json['interests'] ?? []),
-        bio: json['bio'] ?? '',
-        location: json['location'] ?? '',
-        availability: json['availability'] ?? '',
-        avatarUrl: json['avatar_url'],
-        coverUrl: json['cover_url'],
-        emailVerified: json['email_verified'] ?? false,
-        isOnboarded: json['is_onboarded'] ?? false,
-        createdAt: DateTime.parse(json['created_at']),
-      )).toList();
+      final users = data
+          .map(
+            (json) => auth_user.User(
+              id: json['id'],
+              email: json['email'] ?? '',
+              name: json['full_name'],
+              username: json['username'],
+              profession: json['profession'],
+              skills: List<String>.from(json['skills'] ?? []),
+              interests: List<String>.from(json['interests'] ?? []),
+              bio: json['bio'] ?? '',
+              location: json['location'] ?? '',
+              availability: json['availability'] ?? '',
+              avatarUrl: json['avatar_url'],
+              coverUrl: json['cover_url'],
+              emailVerified: json['email_verified'] ?? false,
+              isOnboarded: json['is_onboarded'] ?? false,
+              createdAt: DateTime.parse(json['created_at']),
+            ),
+          )
+          .toList();
 
       return Right(users);
     } catch (e) {
@@ -181,28 +186,38 @@ class FeedRepositoryImpl implements FeedRepository {
   }
 
   @override
-  Future<Either<Failure, Post>> createPost(String content, {List<String>? imageUrls, PostType type = PostType.text}) async {
+  Future<Either<Failure, Post>> createPost(
+    String content, {
+    List<String>? imageUrls,
+    PostType type = PostType.text,
+  }) async {
     try {
       final userId = _supabase.auth.currentUser!.id;
-      final response = await _supabase.from('posts').insert({
-        'author_id': userId,
-        'content': content,
-        'image_urls': imageUrls ?? [],
-        'type': type.name,
-      }).select('*, profiles(full_name, avatar_url, profession)').single();
+      final response = await _supabase
+          .from('posts')
+          .insert({
+            'author_id': userId,
+            'content': content,
+            'image_urls': imageUrls ?? [],
+            'type': type.name,
+          })
+          .select('*, profiles(full_name, avatar_url, profession)')
+          .single();
 
       final profile = response['profiles'];
-      return Right(Post(
-        id: response['id'],
-        authorId: userId,
-        authorName: profile['full_name'] ?? 'Me',
-        authorAvatarUrl: profile['avatar_url'],
-        authorProfession: profile['profession'],
-        content: response['content'],
-        imageUrls: List<String>.from(response['image_urls'] ?? []),
-        type: type,
-        createdAt: DateTime.parse(response['created_at']),
-      ));
+      return Right(
+        Post(
+          id: response['id'],
+          authorId: userId,
+          authorName: profile['full_name'] ?? 'Me',
+          authorAvatarUrl: profile['avatar_url'],
+          authorProfession: profile['profession'],
+          content: response['content'],
+          imageUrls: List<String>.from(response['image_urls'] ?? []),
+          type: type,
+          createdAt: DateTime.parse(response['created_at']),
+        ),
+      );
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
@@ -211,7 +226,9 @@ class FeedRepositoryImpl implements FeedRepository {
   @override
   Future<Either<Failure, List<Story>>> getStories({String? userId}) async {
     try {
-      final query = _supabase.from('stories').select('*, profiles(full_name, avatar_url)');
+      final query = _supabase
+          .from('stories')
+          .select('*, profiles(full_name, avatar_url)');
 
       if (userId != null) {
         query.eq('user_id', userId);
@@ -249,35 +266,47 @@ class FeedRepositoryImpl implements FeedRepository {
   }
 
   @override
-  Future<Either<Failure, Story>> createStory(String mediaUrl, {String? caption, StoryType type = StoryType.image}) async {
+  Future<Either<Failure, Story>> createStory(
+    String mediaUrl, {
+    String? caption,
+    StoryType type = StoryType.image,
+  }) async {
     try {
       final userId = _supabase.auth.currentUser!.id;
-      final expiresAt = DateTime.now().add(Duration(hours: 24)); // Stories expire in 24 hours
+      final expiresAt = DateTime.now().add(
+        Duration(hours: 24),
+      ); // Stories expire in 24 hours
 
-      final response = await _supabase.from('stories').insert({
-        'user_id': userId,
-        'media_url': mediaUrl,
-        'caption': caption,
-        'type': type.name,
-        'created_at': DateTime.now().toIso8601String(),
-        'expires_at': expiresAt.toIso8601String(),
-      }).select('*, profiles(full_name, avatar_url)').single();
+      final response = await _supabase
+          .from('stories')
+          .insert({
+            'user_id': userId,
+            'media_url': mediaUrl,
+            'caption': caption,
+            'type': type.name,
+            'created_at': DateTime.now().toIso8601String(),
+            'expires_at': expiresAt.toIso8601String(),
+          })
+          .select('*, profiles(full_name, avatar_url)')
+          .single();
 
       final profile = response['profiles'];
-      return Right(Story(
-        id: response['id'],
-        userId: userId,
-        userName: profile['full_name'] ?? 'Me',
-        userAvatarUrl: profile['avatar_url'],
-        mediaUrl: response['media_url'],
-        type: StoryType.values.firstWhere(
-          (e) => e.name == (response['type'] ?? 'image'),
-          orElse: () => StoryType.image,
+      return Right(
+        Story(
+          id: response['id'],
+          userId: userId,
+          userName: profile['full_name'] ?? 'Me',
+          userAvatarUrl: profile['avatar_url'],
+          mediaUrl: response['media_url'],
+          type: StoryType.values.firstWhere(
+            (e) => e.name == (response['type'] ?? 'image'),
+            orElse: () => StoryType.image,
+          ),
+          createdAt: DateTime.parse(response['created_at']),
+          expiresAt: DateTime.parse(response['expires_at']),
+          isViewed: false,
         ),
-        createdAt: DateTime.parse(response['created_at']),
-        expiresAt: DateTime.parse(response['expires_at']),
-        isViewed: false,
-      ));
+      );
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
@@ -293,7 +322,10 @@ class FeedRepositoryImpl implements FeedRepository {
       });
 
       // Also update the story to mark it as viewed by current user
-      await _supabase.from('stories').update({'is_viewed': true}).eq('id', storyId);
+      await _supabase
+          .from('stories')
+          .update({'is_viewed': true})
+          .eq('id', storyId);
 
       return const Right(null);
     } catch (e) {
@@ -302,7 +334,10 @@ class FeedRepositoryImpl implements FeedRepository {
   }
 
   @override
-  Future<Either<Failure, List<Business>>> getBusinesses({String? category, double? minRating}) async {
+  Future<Either<Failure, List<Business>>> getBusinesses({
+    String? category,
+    double? minRating,
+  }) async {
     try {
       final query = _supabase.from('businesses').select('*, categories(name)');
 
@@ -350,7 +385,10 @@ class FeedRepositoryImpl implements FeedRepository {
   }
 
   @override
-  Future<Either<Failure, List<Community>>> getCommunities({String? category, int? minMemberCount}) async {
+  Future<Either<Failure, List<Community>>> getCommunities({
+    String? category,
+    int? minMemberCount,
+  }) async {
     try {
       final query = _supabase.from('communities').select('*');
 
@@ -386,7 +424,10 @@ class FeedRepositoryImpl implements FeedRepository {
   }
 
   @override
-  Future<Either<Failure, List<Job>>> getJobs({String? category, double? minSalary}) async {
+  Future<Either<Failure, List<Job>>> getJobs({
+    String? category,
+    double? minSalary,
+  }) async {
     try {
       final query = _supabase.from('jobs').select('*');
 
@@ -428,7 +469,10 @@ class FeedRepositoryImpl implements FeedRepository {
   }
 
   @override
-  Future<Either<Failure, List<LocalNews>>> getLocalNews({String? category, String? location}) async {
+  Future<Either<Failure, List<LocalNews>>> getLocalNews({
+    String? category,
+    String? location,
+  }) async {
     try {
       final query = _supabase.from('local_news').select('*');
 
@@ -440,7 +484,9 @@ class FeedRepositoryImpl implements FeedRepository {
         query.eq('location', location);
       }
 
-      final response = await query.limit(20).order('published_at', ascending: false);
+      final response = await query
+          .limit(20)
+          .order('published_at', ascending: false);
 
       final List<dynamic> data = response as List<dynamic>;
       final newsItems = data.map((json) {

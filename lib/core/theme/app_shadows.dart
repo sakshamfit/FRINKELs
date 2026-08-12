@@ -29,7 +29,7 @@ abstract class AppShadows {
     color: const Color(0x99FFFFFF), // rgba(255,255,255,.6)
     width: 1,
   );
-  
+
   static Border get glassInsetBorderDark => Border.all(
     color: const Color(0x1FFFFFFF), // rgba(255,255,255,.12)
     width: 1,

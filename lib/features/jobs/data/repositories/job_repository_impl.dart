@@ -10,7 +10,10 @@ class JobRepositoryImpl implements JobRepository {
   JobRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, List<Job>>> getJobs({int limit = 20, int offset = 0}) async {
+  Future<Either<Failure, List<Job>>> getJobs({
+    int limit = 20,
+    int offset = 0,
+  }) async {
     try {
       final jobs = await remoteDataSource.getJobs(limit: limit, offset: offset);
       return Right(jobs);

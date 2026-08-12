@@ -256,7 +256,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       color: isDark ? AppColors.cardDark : AppColors.cardLight,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1),
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.1)
+                            : Colors.black.withValues(alpha: 0.1),
                       ),
                     ),
                     child: Text(skill, style: AppTypography.tiny),

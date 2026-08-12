@@ -19,7 +19,9 @@ class ErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final secondaryColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondaryColor = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
 
     return Center(
       child: Padding(
@@ -54,10 +56,7 @@ class ErrorState extends StatelessWidget {
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 32),
-              FrinkelsButton.primary(
-                text: 'Try Again',
-                onPressed: onRetry,
-              ),
+              FrinkelsButton.primary(text: 'Try Again', onPressed: onRetry),
             ],
           ],
         ),

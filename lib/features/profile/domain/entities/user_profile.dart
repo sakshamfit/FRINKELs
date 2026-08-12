@@ -33,17 +33,17 @@ class UserProfile extends Profile {
 
   @override
   List<Object?> get props => [
-        ...super.props,
-        email,
-        profession,
-        emailVerified,
-        isOnboarded,
-        createdAt,
-        lastSeen,
-        followersCount,
-        followingCount,
-        postsCount,
-      ];
+    ...super.props,
+    email,
+    profession,
+    emailVerified,
+    isOnboarded,
+    createdAt,
+    lastSeen,
+    followersCount,
+    followingCount,
+    postsCount,
+  ];
 
   @override
   UserProfile copyWith({
@@ -96,8 +96,12 @@ class UserProfile extends Profile {
       profession: json['profession'],
       emailVerified: json['email_verified'] ?? false,
       isOnboarded: json['is_onboarded'] ?? false,
-      createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
-      lastSeen: json['last_seen'] != null ? DateTime.parse(json['last_seen']) : null,
+      createdAt: DateTime.parse(
+        json['created_at'] ?? DateTime.now().toIso8601String(),
+      ),
+      lastSeen: json['last_seen'] != null
+          ? DateTime.parse(json['last_seen'])
+          : null,
       followersCount: json['followers_count'] ?? 0,
       followingCount: json['following_count'] ?? 0,
       postsCount: json['posts_count'] ?? 0,

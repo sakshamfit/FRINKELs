@@ -42,9 +42,7 @@ class WeatherWidget extends StatelessWidget {
               children: [
                 Text(
                   'San Francisco, CA',
-                  style: AppTypography.cardTitle.copyWith(
-                    color: Colors.white,
-                  ),
+                  style: AppTypography.cardTitle.copyWith(color: Colors.white),
                 ),
                 const SizedBox(height: 4),
                 Text(

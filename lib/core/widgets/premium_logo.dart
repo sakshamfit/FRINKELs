@@ -5,11 +5,7 @@ class PremiumLogo extends StatelessWidget {
   final double size;
   final bool hasGlow;
 
-  const PremiumLogo({
-    super.key,
-    this.size = 100,
-    this.hasGlow = true,
-  });
+  const PremiumLogo({super.key, this.size = 100, this.hasGlow = true});
 
   @override
   Widget build(BuildContext context) {
@@ -18,18 +14,20 @@ class PremiumLogo extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(size * 0.28), // 28 radius logic
-        boxShadow: hasGlow ? [
-          BoxShadow(
-            color: AppColors.accent.withValues(alpha: 0.2),
-            blurRadius: size * 0.4,
-            spreadRadius: 2,
-          ),
-          BoxShadow(
-            color: AppColors.softCyanGlow.withValues(alpha: 0.1),
-            blurRadius: size * 0.2,
-            spreadRadius: 1,
-          ),
-        ] : null,
+        boxShadow: hasGlow
+            ? [
+                BoxShadow(
+                  color: AppColors.accent.withValues(alpha: 0.2),
+                  blurRadius: size * 0.4,
+                  spreadRadius: 2,
+                ),
+                BoxShadow(
+                  color: AppColors.softCyanGlow.withValues(alpha: 0.1),
+                  blurRadius: size * 0.2,
+                  spreadRadius: 1,
+                ),
+              ]
+            : null,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(size * 0.28),

@@ -15,7 +15,9 @@ class NotificationRemoteDataSource {
     try {
       final userId = _supabase.auth.currentUser?.id;
       if (userId == null) {
-        return const Left(AuthenticationFailure(message: 'User not authenticated'));
+        return const Left(
+          AuthenticationFailure(message: 'User not authenticated'),
+        );
       }
 
       final response = await _supabase
@@ -52,7 +54,9 @@ class NotificationRemoteDataSource {
     try {
       final userId = _supabase.auth.currentUser?.id;
       if (userId == null) {
-        return const Left(AuthenticationFailure(message: 'User not authenticated'));
+        return const Left(
+          AuthenticationFailure(message: 'User not authenticated'),
+        );
       }
 
       final response = await _supabase
@@ -84,7 +88,9 @@ class NotificationRemoteDataSource {
     try {
       final userId = _supabase.auth.currentUser?.id;
       if (userId == null) {
-        return const Left(AuthenticationFailure(message: 'User not authenticated'));
+        return const Left(
+          AuthenticationFailure(message: 'User not authenticated'),
+        );
       }
 
       await _supabase
@@ -98,12 +104,11 @@ class NotificationRemoteDataSource {
     }
   }
 
-  Future<Either<Failure, void>> deleteNotification(String notificationId) async {
+  Future<Either<Failure, void>> deleteNotification(
+    String notificationId,
+  ) async {
     try {
-      await _supabase
-          .from('notifications')
-          .delete()
-          .eq('id', notificationId);
+      await _supabase.from('notifications').delete().eq('id', notificationId);
       return const Right(null);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));

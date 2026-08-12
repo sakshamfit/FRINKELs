@@ -88,7 +88,8 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
     try {
       final response = await http.get(
         Uri.parse(
-            'https://api.giphy.com/v1/gifs/trending?api_key=CxprtBQaMpOSUJShB2y7BwysWOgW7trk&limit=25'),
+          'https://api.giphy.com/v1/gifs/trending?api_key=CxprtBQaMpOSUJShB2y7BwysWOgW7trk&limit=25',
+        ),
       );
       if (response.statusCode == 200 && mounted) {
         final data = json.decode(response.body);
@@ -112,7 +113,8 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
     try {
       final response = await http.get(
         Uri.parse(
-            'https://api.giphy.com/v1/gifs/search?api_key=CxprtBQaMpOSUJShB2y7BwysWOgW7trk&q=$query&limit=25'),
+          'https://api.giphy.com/v1/gifs/search?api_key=CxprtBQaMpOSUJShB2y7BwysWOgW7trk&q=$query&limit=25',
+        ),
       );
       if (response.statusCode == 200 && mounted) {
         final data = json.decode(response.body);
@@ -169,9 +171,9 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error selecting image: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error selecting image: $e')));
       }
     }
   }
@@ -189,9 +191,9 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error selecting video: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error selecting video: $e')));
       }
     }
   }
@@ -233,12 +235,12 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
                     prefixIcon: Icon(Icons.search),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () {
-                        _searchController.clear();
-                        _searchGifs('');
-                      },
-                    )
+                            icon: Icon(Icons.clear),
+                            onPressed: () {
+                              _searchController.clear();
+                              _searchGifs('');
+                            },
+                          )
                         : null,
                     filled: true,
                     fillColor: isDark
@@ -326,18 +328,11 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.photo_library,
-                  size: 32,
-                  color: Colors.grey[600],
-                ),
+                Icon(Icons.photo_library, size: 32, color: Colors.grey[600]),
                 SizedBox(height: 4),
                 Text(
                   'Gallery',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -367,18 +362,11 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.videocam,
-                  size: 32,
-                  color: Colors.grey[600],
-                ),
+                Icon(Icons.videocam, size: 32, color: Colors.grey[600]),
                 SizedBox(height: 4),
                 Text(
                   'Videos',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -392,63 +380,66 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
     return _isLoadingGifs
         ? Center(child: CircularProgressIndicator())
         : _gifResults.isEmpty
-            ? Center(child: Text('No GIFs found'))
-            : GridView.builder(
-                padding: EdgeInsets.all(16),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                ),
-                itemCount: _gifResults.length,
-                itemBuilder: (context, index) {
-                  final gif = _gifResults[index];
-                  final url = gif['images']['fixed_height']['url'];
-                  return GestureDetector(
-                    onTap: () => widget.onGifSelected(url),
-                    child: Image.network(
-                      url,
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                },
+        ? Center(child: Text('No GIFs found'))
+        : GridView.builder(
+            padding: EdgeInsets.all(16),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
+            itemCount: _gifResults.length,
+            itemBuilder: (context, index) {
+              final gif = _gifResults[index];
+              final url = gif['images']['fixed_height']['url'];
+              return GestureDetector(
+                onTap: () => widget.onGifSelected(url),
+                child: Image.network(url, fit: BoxFit.cover),
               );
+            },
+          );
   }
 
   Widget _buildStickersTab() {
     return _isLoadingStickers
         ? Center(child: CircularProgressIndicator())
         : _stickerPacks.isEmpty
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.image_search,
-                      size: 48,
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'No stickers installed',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Sticker packs will appear here once available',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.image_search,
+                  size: 48,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.5),
                 ),
-              )
-            : SizedBox.shrink();
+                SizedBox(height: 16),
+                Text(
+                  'No stickers installed',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.7),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Sticker packs will appear here once available',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.5),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          )
+        : SizedBox.shrink();
   }
 
   Widget _buildEmojiTab() {
@@ -526,10 +517,7 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
               SizedBox(height: 4),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               ),
             ],
           ),
@@ -543,11 +531,7 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.place,
-            size: 64,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.place, size: 64, color: Colors.grey[400]),
           SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: widget.onLocationPressed,
@@ -564,11 +548,7 @@ abstract class MediaDrawerState extends ConsumerState<MediaDrawer>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.mic,
-            size: 64,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.mic, size: 64, color: Colors.grey[400]),
           SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: widget.onVoicePressed,

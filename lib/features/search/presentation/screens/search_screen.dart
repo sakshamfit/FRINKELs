@@ -46,7 +46,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final searchState = ref.watch(searchProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
@@ -63,7 +65,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             Expanded(
               child: searchState.when(
                 data: (result) {
-                  if (result.users.isEmpty && result.posts.isEmpty && result.jobs.isEmpty) {
+                  if (result.users.isEmpty &&
+                      result.posts.isEmpty &&
+                      result.jobs.isEmpty) {
                     return _buildEmptyState(isDark);
                   }
                   return _buildResultsList(result, isDark);
@@ -83,11 +87,21 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(LucideIcons.search, size: 48, color: AppColors.textSecondary.withValues(alpha: 0.3)),
+          Icon(
+            LucideIcons.search,
+            size: 48,
+            color: AppColors.textSecondary.withValues(alpha: 0.3),
+          ),
           const SizedBox(height: 16),
-          Text('Search FRINKELs', style: AppTypography.body.copyWith(color: AppColors.textSecondary)),
+          Text(
+            'Search FRINKELs',
+            style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+          ),
           const SizedBox(height: 8),
-          Text('Try searching for people, jobs, or posts', style: AppTypography.caption),
+          Text(
+            'Try searching for people, jobs, or posts',
+            style: AppTypography.caption,
+          ),
         ],
       ),
     );
@@ -131,18 +145,30 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundImage: user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
+              backgroundImage: user.avatarUrl != null
+                  ? NetworkImage(user.avatarUrl!)
+                  : null,
               radius: 24,
-              child: user.avatarUrl == null ? const Icon(LucideIcons.user) : null,
+              child: user.avatarUrl == null
+                  ? const Icon(LucideIcons.user)
+                  : null,
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(user.name ?? 'User', style: AppTypography.body.copyWith(fontWeight: FontWeight.w700)),
+                  Text(
+                    user.name ?? 'User',
+                    style: AppTypography.body.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text(user.profession ?? 'Professional', style: AppTypography.tiny),
+                  Text(
+                    user.profession ?? 'Professional',
+                    style: AppTypography.tiny,
+                  ),
                   if (user.location != null && user.location!.isNotEmpty)
                     Text(user.location!, style: AppTypography.caption),
                 ],
@@ -165,21 +191,42 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
-              child: const Icon(LucideIcons.briefcase, color: AppColors.accent, size: 18),
+              decoration: BoxDecoration(
+                color: AppColors.accent.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                LucideIcons.briefcase,
+                color: AppColors.accent,
+                size: 18,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(job.title, style: AppTypography.body.copyWith(fontWeight: FontWeight.w700)),
+                  Text(
+                    job.title,
+                    style: AppTypography.body.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text('${job.companyName} • ${job.location}', style: AppTypography.tiny),
+                  Text(
+                    '${job.companyName} • ${job.location}',
+                    style: AppTypography.tiny,
+                  ),
                 ],
               ),
             ),
-            Text(job.salary, style: AppTypography.tiny.copyWith(fontWeight: FontWeight.w700, color: AppColors.success)),
+            Text(
+              job.salary,
+              style: AppTypography.tiny.copyWith(
+                fontWeight: FontWeight.w700,
+                color: AppColors.success,
+              ),
+            ),
           ],
         ),
       ),
@@ -198,15 +245,27 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               children: [
                 CircleAvatar(
                   radius: 16,
-                  backgroundImage: post.authorAvatarUrl != null ? NetworkImage(post.authorAvatarUrl!) : null,
-                  child: post.authorAvatarUrl == null ? const Icon(LucideIcons.user, size: 16) : null,
+                  backgroundImage: post.authorAvatarUrl != null
+                      ? NetworkImage(post.authorAvatarUrl!)
+                      : null,
+                  child: post.authorAvatarUrl == null
+                      ? const Icon(LucideIcons.user, size: 16)
+                      : null,
                 ),
                 const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(post.authorName, style: AppTypography.tiny.copyWith(fontWeight: FontWeight.w700)),
-                    Text('${DateTime.now().difference(post.createdAt).inDays}d ago', style: AppTypography.caption),
+                    Text(
+                      post.authorName,
+                      style: AppTypography.tiny.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      '${DateTime.now().difference(post.createdAt).inDays}d ago',
+                      style: AppTypography.caption,
+                    ),
                   ],
                 ),
               ],

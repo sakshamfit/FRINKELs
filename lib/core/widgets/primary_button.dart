@@ -65,7 +65,7 @@ class _FrinkelsButtonState extends State<FrinkelsButton> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     Color bgColor;
     Color textColor;
     List<BoxShadow>? shadows;
@@ -87,7 +87,9 @@ class _FrinkelsButtonState extends State<FrinkelsButton> {
         textColor = isDark ? Colors.white : AppColors.textPrimary;
         shadows = null;
         border = Border.all(
-          color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.06),
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.12)
+              : Colors.black.withValues(alpha: 0.06),
           width: 1,
         );
         break;
@@ -124,7 +126,9 @@ class _FrinkelsButtonState extends State<FrinkelsButton> {
                     height: 20,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(textColor.withValues(alpha: 0.6)),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        textColor.withValues(alpha: 0.6),
+                      ),
                     ),
                   ),
                 )

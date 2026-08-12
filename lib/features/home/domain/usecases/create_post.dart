@@ -8,6 +8,9 @@ class CreatePost {
 
   CreatePost(this.repository);
 
-  Future<Either<Failure, Post>> call(String content, {List<String>? imageUrls, PostType type = PostType.text}) =>
-      repository.createPost(content, imageUrls: imageUrls, type: type);
+  Future<Either<Failure, Post>> call(
+    String content, {
+    List<String>? imageUrls,
+    PostType type = PostType.text,
+  }) => repository.createPost(content, imageUrls: imageUrls, type: type);
 }

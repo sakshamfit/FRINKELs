@@ -12,7 +12,10 @@ class AuthRepositoryImpl implements UserRepository {
   @override
   Future<Either<Failure, User>> signIn(String email, String password) async {
     try {
-      final user = await remoteDataSource.signInWithEmailPassword(email, password);
+      final user = await remoteDataSource.signInWithEmailPassword(
+        email,
+        password,
+      );
       return Right(user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -40,7 +43,11 @@ class AuthRepositoryImpl implements UserRepository {
     required String name,
   }) async {
     try {
-      final user = await remoteDataSource.signUpWithEmailPassword(email, password, name);
+      final user = await remoteDataSource.signUpWithEmailPassword(
+        email,
+        password,
+        name,
+      );
       return Right(user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -86,7 +93,9 @@ class AuthRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, User>> updateUserProfile(Map<String, dynamic> data) async {
+  Future<Either<Failure, User>> updateUserProfile(
+    Map<String, dynamic> data,
+  ) async {
     try {
       final user = await remoteDataSource.updateUserProfile(data);
       return Right(user);
@@ -98,7 +107,9 @@ class AuthRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, User>> completeOnboarding(Map<String, dynamic> data) async {
+  Future<Either<Failure, User>> completeOnboarding(
+    Map<String, dynamic> data,
+  ) async {
     try {
       final user = await remoteDataSource.completeOnboarding(data);
       return Right(user);

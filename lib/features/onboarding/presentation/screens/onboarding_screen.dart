@@ -39,9 +39,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   Future<void> _completeOnboarding() async {
     debugPrint('ONBOARDING: Get Started tapped');
-    
+
     final authController = ref.read(authControllerProvider);
-    
+
     debugPrint('ONBOARDING: Starting onboarding completion');
     await authController.completeOnboarding({
       'username': _usernameController.text,
@@ -53,7 +53,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     });
 
     if (authController.state.errorMessage != null) {
-      debugPrint('ONBOARDING: Error occurred: ${authController.state.errorMessage}');
+      debugPrint(
+        'ONBOARDING: Error occurred: ${authController.state.errorMessage}',
+      );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(authController.state.errorMessage!)),

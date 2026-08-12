@@ -42,7 +42,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<Failure, void>> updateUserProfile(
-      UserProfile userProfile) async {
+    UserProfile userProfile,
+  ) async {
     try {
       await _remoteDataSource.updateUserProfile(userProfile);
       return const Right(null);
@@ -123,13 +124,16 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<Failure, List<Profile>>> getFollowers(
-      String userId, {
-      int limit = 20,
-      int offset = 0,
-    }) async {
+    String userId, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
     try {
-      final followers =
-          await _remoteDataSource.getFollowers(userId, limit: limit, offset: offset);
+      final followers = await _remoteDataSource.getFollowers(
+        userId,
+        limit: limit,
+        offset: offset,
+      );
       return Right(followers);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
@@ -138,13 +142,16 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<Failure, List<Profile>>> getFollowing(
-      String userId, {
-      int limit = 20,
-      int offset = 0,
-    }) async {
+    String userId, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
     try {
-      final following =
-          await _remoteDataSource.getFollowing(userId, limit: limit, offset: offset);
+      final following = await _remoteDataSource.getFollowing(
+        userId,
+        limit: limit,
+        offset: offset,
+      );
       return Right(following);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
@@ -162,10 +169,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, List<Profile>>> getSuggestedProfiles(
-      {int limit = 10}) async {
+  Future<Either<Failure, List<Profile>>> getSuggestedProfiles({
+    int limit = 10,
+  }) async {
     try {
-      final profiles = await _remoteDataSource.getSuggestedProfiles(limit: limit);
+      final profiles = await _remoteDataSource.getSuggestedProfiles(
+        limit: limit,
+      );
       return Right(profiles);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));

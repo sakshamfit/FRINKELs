@@ -40,7 +40,11 @@ class ProfileCard extends StatelessWidget {
                       ? NetworkImage(profile.avatarUrl!)
                       : null,
                   child: profile.avatarUrl == null
-                      ? Icon(LucideIcons.user, size: 20, color: isDark ? Colors.white70 : Colors.grey[600])
+                      ? Icon(
+                          LucideIcons.user,
+                          size: 20,
+                          color: isDark ? Colors.white70 : Colors.grey[600],
+                        )
                       : null,
                 ),
                 const SizedBox(width: 12),
@@ -76,15 +80,15 @@ class ProfileCard extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.accent,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: const Text(
-                      'Follow',
-                      style: TextStyle(fontSize: 12),
-                    ),
+                    child: const Text('Follow', style: TextStyle(fontSize: 12)),
                   ),
               ],
             ),
@@ -93,7 +97,10 @@ class ProfileCard extends StatelessWidget {
                 right: -4,
                 top: -4,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.error,
                     borderRadius: BorderRadius.circular(12),

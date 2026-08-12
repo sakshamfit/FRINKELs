@@ -10,21 +10,53 @@ class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl(this.remoteDataSource);
 
   @override
-  Stream<List<Message>> getMessages(String otherUserId, {int limit = 50, String? beforeMessageId}) {
-    return remoteDataSource.getMessages(otherUserId, limit: limit, beforeMessageId: beforeMessageId);
+  Stream<List<Message>> getMessages(
+    String otherUserId, {
+    int limit = 50,
+    String? beforeMessageId,
+  }) {
+    return remoteDataSource.getMessages(
+      otherUserId,
+      limit: limit,
+      beforeMessageId: beforeMessageId,
+    );
   }
 
   @override
-  Stream<List<Message>> getMessagesAfter(String otherUserId, {int limit = 50, String? afterMessageId}) {
-    return remoteDataSource.getMessagesAfter(otherUserId, limit: limit, afterMessageId: afterMessageId);
+  Stream<List<Message>> getMessagesAfter(
+    String otherUserId, {
+    int limit = 50,
+    String? afterMessageId,
+  }) {
+    return remoteDataSource.getMessagesAfter(
+      otherUserId,
+      limit: limit,
+      afterMessageId: afterMessageId,
+    );
   }
 
   @override
-  Future<Either<Failure, void>> sendMessage(String receiverId, String content,
-      {String? imageUrl, String? videoUrl, String? voiceUrl, String? fileUrl, String? stickerPackId, String? stickerId}) async {
+  Future<Either<Failure, void>> sendMessage(
+    String receiverId,
+    String content, {
+    String? imageUrl,
+    String? videoUrl,
+    String? voiceUrl,
+    String? fileUrl,
+    String? stickerPackId,
+    String? stickerId,
+  }) async {
     try {
-      await remoteDataSource.sendMessage(receiverId, content,
-          imageUrl: imageUrl, videoUrl: videoUrl, voiceUrl: voiceUrl, fileUrl: fileUrl, stickerPackId: stickerPackId, stickerId: stickerId);
+      await remoteDataSource.sendMessage(
+        receiverId,
+        content,
+        imageUrl: imageUrl,
+        videoUrl: videoUrl,
+        voiceUrl: voiceUrl,
+        fileUrl: fileUrl,
+        stickerPackId: stickerPackId,
+        stickerId: stickerId,
+      );
       return const Right(null);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
@@ -58,7 +90,10 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure, void>> sendTypingIndicator(String conversationId, bool isTyping) async {
+  Future<Either<Failure, void>> sendTypingIndicator(
+    String conversationId,
+    bool isTyping,
+  ) async {
     try {
       await remoteDataSource.sendTypingIndicator(conversationId, isTyping);
       return const Right(null);
@@ -75,7 +110,10 @@ class ChatRepositoryImpl implements ChatRepository {
 
   // Reactions
   @override
-  Future<Either<Failure, void>> reactToMessage(String messageId, String emoji) async {
+  Future<Either<Failure, void>> reactToMessage(
+    String messageId,
+    String emoji,
+  ) async {
     try {
       await remoteDataSource.reactToMessage(messageId, emoji);
       return const Right(null);
@@ -85,7 +123,10 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure, void>> removeReaction(String messageId, String emoji) async {
+  Future<Either<Failure, void>> removeReaction(
+    String messageId,
+    String emoji,
+  ) async {
     try {
       await remoteDataSource.removeReaction(messageId, emoji);
       return const Right(null);
@@ -96,7 +137,10 @@ class ChatRepositoryImpl implements ChatRepository {
 
   // Message editing
   @override
-  Future<Either<Failure, void>> editMessage(String messageId, String newContent) async {
+  Future<Either<Failure, void>> editMessage(
+    String messageId,
+    String newContent,
+  ) async {
     try {
       await remoteDataSource.editMessage(messageId, newContent);
       return const Right(null);
@@ -107,7 +151,10 @@ class ChatRepositoryImpl implements ChatRepository {
 
   // Message deletion
   @override
-  Future<Either<Failure, void>> deleteMessage(String messageId, bool forEveryone) async {
+  Future<Either<Failure, void>> deleteMessage(
+    String messageId,
+    bool forEveryone,
+  ) async {
     try {
       await remoteDataSource.deleteMessage(messageId, forEveryone);
       return const Right(null);
@@ -134,7 +181,9 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Stream<List<Map<String, dynamic>>> getReactionsForConversation(String conversationId) {
+  Stream<List<Map<String, dynamic>>> getReactionsForConversation(
+    String conversationId,
+  ) {
     return remoteDataSource.getReactionsForConversation(conversationId);
   }
 }

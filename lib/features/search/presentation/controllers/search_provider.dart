@@ -10,15 +10,14 @@ import '../../../auth/presentation/controllers/auth_provider.dart';
 // Provider for the search repository
 final searchRepositoryProvider = Provider<SearchRepository>((ref) {
   final supabase = ref.watch(supabaseProvider);
-  return SearchRepositoryImpl(
-    SupabaseSearchRemoteDataSource(supabase),
-  );
+  return SearchRepositoryImpl(SupabaseSearchRemoteDataSource(supabase));
 });
 
 // Provider for the search notifier
-final searchProvider = StateNotifierProvider<SearchNotifier, AsyncValue<SearchResult>>((ref) {
-  return SearchNotifier(ref.watch(searchRepositoryProvider));
-});
+final searchProvider =
+    StateNotifierProvider<SearchNotifier, AsyncValue<SearchResult>>((ref) {
+      return SearchNotifier(ref.watch(searchRepositoryProvider));
+    });
 
 class SearchResult {
   final List<User> users;
@@ -47,7 +46,8 @@ class SearchResult {
 class SearchNotifier extends StateNotifier<AsyncValue<SearchResult>> {
   final SearchRepository _searchRepository;
 
-  SearchNotifier(this._searchRepository) : super(const AsyncValue.data(SearchResult())) {
+  SearchNotifier(this._searchRepository)
+    : super(const AsyncValue.data(SearchResult())) {
     // Could load recent searches here if needed
   }
 
@@ -71,11 +71,9 @@ class SearchNotifier extends StateNotifier<AsyncValue<SearchResult>> {
       final posts = results[1].fold((l) => <Post>[], (r) => r as List<Post>);
       final jobs = results[2].fold((l) => <Job>[], (r) => r as List<Job>);
 
-      state = AsyncValue.data(SearchResult(
-        users: users,
-        posts: posts,
-        jobs: jobs,
-      ));
+      state = AsyncValue.data(
+        SearchResult(users: users, posts: posts, jobs: jobs),
+      );
     } catch (e) {
       state = AsyncValue.error(e.toString(), StackTrace.current);
     }

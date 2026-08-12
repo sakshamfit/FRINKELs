@@ -46,7 +46,8 @@ class CommunitiesSection extends ConsumerWidget {
         ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.05, end: 0);
       },
       loading: () => _buildLoadingState(isDark),
-      error: (error, stackTrace) => _buildErrorState(isDark, error.toString(), ref),
+      error: (error, stackTrace) =>
+          _buildErrorState(isDark, error.toString(), ref),
     );
   }
 
@@ -94,7 +95,9 @@ class CommunitiesSection extends ConsumerWidget {
                       '0',
                       style: TextStyle(
                         fontSize: 10,
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -114,16 +117,14 @@ class CommunitiesSection extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              LucideIcons.cloud_off,
-              size: 24,
-              color: AppColors.error,
-            ),
+            const Icon(LucideIcons.cloud_off, size: 24, color: AppColors.error),
             const SizedBox(height: 8),
             Text(
               'Failed to load communities',
               style: AppTypography.body.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: 4),
@@ -159,7 +160,9 @@ class CommunitiesSection extends ConsumerWidget {
             Text(
               'No communities found',
               style: AppTypography.body.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
               ),
             ),
           ],

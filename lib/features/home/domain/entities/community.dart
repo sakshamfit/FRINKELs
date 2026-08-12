@@ -25,16 +25,16 @@ class Community extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        description,
-        category,
-        memberCount,
-        isVerified,
-        iconUrl,
-        bannerUrl,
-        createdAt,
-      ];
+    id,
+    name,
+    description,
+    category,
+    memberCount,
+    isVerified,
+    iconUrl,
+    bannerUrl,
+    createdAt,
+  ];
 
   Community copyWith({
     String? id,

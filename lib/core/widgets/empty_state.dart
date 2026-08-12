@@ -23,7 +23,9 @@ class EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final secondaryColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondaryColor = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
 
     return Center(
       child: Padding(
@@ -38,11 +40,7 @@ class EmptyState extends StatelessWidget {
                 color: AppColors.accent.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon,
-                size: 32,
-                color: AppColors.accent,
-              ),
+              child: Icon(icon, size: 32, color: AppColors.accent),
             ),
             const SizedBox(height: 24),
             Text(
@@ -58,10 +56,7 @@ class EmptyState extends StatelessWidget {
             ),
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: 32),
-              FrinkelsButton.primary(
-                text: actionLabel!,
-                onPressed: onAction,
-              ),
+              FrinkelsButton.primary(text: actionLabel!, onPressed: onAction),
             ],
           ],
         ),

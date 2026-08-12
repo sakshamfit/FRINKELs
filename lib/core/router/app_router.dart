@@ -47,7 +47,9 @@ class AppRouter {
         final loggedIn = authState.isAuthenticated;
         final isOnboarded = authState.user?.isOnboarded ?? false;
 
-        debugPrint('ROUTER: Redirect check - path: ${state.uri.path}, loggedIn: $loggedIn, isOnboarded: $isOnboarded');
+        debugPrint(
+          'ROUTER: Redirect check - path: ${state.uri.path}, loggedIn: $loggedIn, isOnboarded: $isOnboarded',
+        );
 
         final isAuthPath = state.uri.path.startsWith('/auth');
         final isSplashPath = state.uri.path == splashPath;

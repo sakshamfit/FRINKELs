@@ -27,19 +27,28 @@ class PostCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: post.authorAvatarUrl != null 
-                      ? NetworkImage(post.authorAvatarUrl!) 
-                      : null,
-                    child: post.authorAvatarUrl == null 
-                      ? const Icon(LucideIcons.user, size: 20) 
-                      : null,
+                    backgroundImage: post.authorAvatarUrl != null
+                        ? NetworkImage(post.authorAvatarUrl!)
+                        : null,
+                    child: post.authorAvatarUrl == null
+                        ? const Icon(LucideIcons.user, size: 20)
+                        : null,
                   ),
                   const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(post.authorName, style: AppTypography.body.copyWith(fontWeight: FontWeight.w700, fontSize: 14)),
-                      Text('2 hours ago', style: AppTypography.tiny), // Replace with timeago
+                      Text(
+                        post.authorName,
+                        style: AppTypography.body.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        '2 hours ago',
+                        style: AppTypography.tiny,
+                      ), // Replace with timeago
                     ],
                   ),
                   const Spacer(),
@@ -52,7 +61,9 @@ class PostCard extends StatelessWidget {
                 aspectRatio: 16 / 10,
                 child: Container(
                   width: double.infinity,
-                  color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.05)
+                      : Colors.black.withValues(alpha: 0.05),
                   child: Image.network(post.imageUrls.first, fit: BoxFit.cover),
                 ),
               ),
@@ -62,13 +73,16 @@ class PostCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (post.content.isNotEmpty) ...[
-                    Text(post.content, style: AppTypography.body.copyWith(fontSize: 14)),
+                    Text(
+                      post.content,
+                      style: AppTypography.body.copyWith(fontSize: 14),
+                    ),
                     const SizedBox(height: 16),
                   ],
                   Row(
                     children: [
                       Icon(
-                        post.isLiked ? LucideIcons.heart : LucideIcons.heart, 
+                        post.isLiked ? LucideIcons.heart : LucideIcons.heart,
                         size: 24,
                         color: post.isLiked ? AppColors.error : null,
                       ),
@@ -78,14 +92,22 @@ class PostCard extends StatelessWidget {
                       const Icon(LucideIcons.send, size: 24),
                       const Spacer(),
                       Icon(
-                        post.isBookmarked ? LucideIcons.bookmark : LucideIcons.bookmark, 
+                        post.isBookmarked
+                            ? LucideIcons.bookmark
+                            : LucideIcons.bookmark,
                         size: 24,
                         color: post.isBookmarked ? AppColors.accent : null,
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Text('${post.likesCount} likes', style: AppTypography.body.copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
+                  Text(
+                    '${post.likesCount} likes',
+                    style: AppTypography.body.copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                    ),
+                  ),
                 ],
               ),
             ),

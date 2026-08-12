@@ -15,7 +15,8 @@ class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
+  ConsumerState<NotificationsScreen> createState() =>
+      _NotificationsScreenState();
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
@@ -64,10 +65,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     final notificationsState = ref.watch(notificationsProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       appBar: AppBar(
-        backgroundColor: (isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary)
-            .withValues(alpha: 0.9),
+        backgroundColor:
+            (isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary)
+                .withValues(alpha: 0.9),
         title: Text(
           'Notifications',
           style: AppTypography.section.copyWith(
@@ -90,7 +94,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
           preferredSize: const Size.fromHeight(1),
           child: Container(
             height: 1,
-            color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.1),
           ),
         ),
       ),
@@ -110,20 +116,26 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   Icon(
                     LucideIcons.bell_off,
                     size: 48,
-                    color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.grey[400],
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.5)
+                        : Colors.grey[400],
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'No notifications',
                     style: AppTypography.body.copyWith(
-                      color: isDark ? Colors.white.withValues(alpha: 0.7) : Colors.grey[600],
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.7)
+                          : Colors.grey[600],
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'You will see notifications here when you receive notifications',
                     style: AppTypography.caption.copyWith(
-                      color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.grey[500],
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.5)
+                          : Colors.grey[500],
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -139,7 +151,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               child: ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.all(16),
-                itemCount: notificationsState.notifications.length +
+                itemCount:
+                    notificationsState.notifications.length +
                     (notificationsState.hasMore ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == notificationsState.notifications.length) {
@@ -154,7 +167,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                     notification: notification,
                     onTap: () => _onNotificationTap(notification),
                     onMarkAsRead: () => _markAsRead(notification.id),
-                  ).animate().fadeIn(duration: const Duration(milliseconds: 200), delay: Duration(milliseconds: index * 30));
+                  ).animate().fadeIn(
+                    duration: const Duration(milliseconds: 200),
+                    delay: Duration(milliseconds: index * 30),
+                  );
                 },
               ),
             ),

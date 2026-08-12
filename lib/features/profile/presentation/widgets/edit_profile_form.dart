@@ -254,10 +254,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
         Icon(icon, size: 20),
         const SizedBox(width: 8),
         Expanded(child: Text(label)),
-        Switch(
-          value: value,
-          onChanged: onChanged,
-        ),
+        Switch(value: value, onChanged: onChanged),
       ],
     );
   }

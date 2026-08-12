@@ -23,15 +23,15 @@ class Documentation extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        content,
-        category,
-        tags,
-        createdAt,
-        updatedAt,
-        isPublished,
-      ];
+    id,
+    title,
+    content,
+    category,
+    tags,
+    createdAt,
+    updatedAt,
+    isPublished,
+  ];
 
   Documentation copyWith({
     String? id,

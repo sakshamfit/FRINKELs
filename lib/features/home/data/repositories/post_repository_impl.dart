@@ -10,9 +10,15 @@ class PostRepositoryImpl implements PostRepository {
   PostRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, List<Post>>> getFeed({int limit = 20, int offset = 0}) async {
+  Future<Either<Failure, List<Post>>> getFeed({
+    int limit = 20,
+    int offset = 0,
+  }) async {
     try {
-      final posts = await remoteDataSource.getFeed(limit: limit, offset: offset);
+      final posts = await remoteDataSource.getFeed(
+        limit: limit,
+        offset: offset,
+      );
       return Right(posts);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
@@ -20,7 +26,10 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, Post>> createPost(String content, List<String> imageUrls) async {
+  Future<Either<Failure, Post>> createPost(
+    String content,
+    List<String> imageUrls,
+  ) async {
     try {
       final post = await remoteDataSource.createPost(content, imageUrls);
       return Right(post);

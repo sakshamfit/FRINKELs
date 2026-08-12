@@ -37,8 +37,19 @@ class Post extends Equatable {
 
   @override
   List<Object?> get props => [
-    id, authorId, authorName, authorAvatarUrl, authorProfession,
-    content, imageUrls, videoUrl, type, likesCount, commentsCount,
-    isLiked, isBookmarked, createdAt
+    id,
+    authorId,
+    authorName,
+    authorAvatarUrl,
+    authorProfession,
+    content,
+    imageUrls,
+    videoUrl,
+    type,
+    likesCount,
+    commentsCount,
+    isLiked,
+    isBookmarked,
+    createdAt,
   ];
 }

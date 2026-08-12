@@ -107,10 +107,7 @@ class StorageService {
   ///
   /// [path] - The path of the file in the bucket
   /// [bucket] - The bucket name (default: 'uploads')
-  String getPublicUrl({
-    required String path,
-    String bucket = 'uploads',
-  }) {
+  String getPublicUrl({required String path, String bucket = 'uploads'}) {
     return _supabase.storage.from(bucket).getPublicUrl(path);
   }
 }

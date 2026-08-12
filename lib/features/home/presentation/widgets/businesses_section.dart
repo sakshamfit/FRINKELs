@@ -46,7 +46,8 @@ class BusinessesSection extends ConsumerWidget {
         ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.05, end: 0);
       },
       loading: () => _buildLoadingState(isDark),
-      error: (error, stackTrace) => _buildErrorState(isDark, error.toString(), ref),
+      error: (error, stackTrace) =>
+          _buildErrorState(isDark, error.toString(), ref),
     );
   }
 
@@ -94,7 +95,11 @@ class BusinessesSection extends ConsumerWidget {
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              const Icon(Icons.star, size: 14, color: Colors.amberAccent),
+                              const Icon(
+                                Icons.star,
+                                size: 14,
+                                color: Colors.amberAccent,
+                              ),
                               const SizedBox(width: 2),
                               Text(
                                 '4.5',
@@ -134,16 +139,14 @@ class BusinessesSection extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              LucideIcons.cloud_off,
-              size: 32,
-              color: AppColors.error,
-            ),
+            const Icon(LucideIcons.cloud_off, size: 32, color: AppColors.error),
             const SizedBox(height: 12),
             Text(
               'Failed to load businesses',
               style: AppTypography.body.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: 8),
@@ -179,7 +182,9 @@ class BusinessesSection extends ConsumerWidget {
             Text(
               'No businesses found',
               style: AppTypography.body.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
               ),
             ),
           ],

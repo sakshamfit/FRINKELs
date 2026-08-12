@@ -11,14 +11,13 @@ class NearbyScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: Text(
-              'Nearby Places',
-              style: AppTypography.section,
-            ),
+            title: Text('Nearby Places', style: AppTypography.section),
             centerTitle: false,
             floating: true,
             backgroundColor: Colors.transparent,
@@ -46,10 +45,7 @@ class NearbyScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Popular Nearby',
-                    style: AppTypography.cardTitle,
-                  ),
+                  Text('Popular Nearby', style: AppTypography.cardTitle),
                   const SizedBox(height: 16),
                   SizedBox(
                     height: 220,
@@ -62,20 +58,18 @@ class NearbyScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  Text(
-                    'All Nearby',
-                    style: AppTypography.cardTitle,
-                  ),
+                  Text('All Nearby', style: AppTypography.cardTitle),
                   const SizedBox(height: 16),
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.75,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.75,
+                        ),
                     itemCount: 10,
                     itemBuilder: (context, index) {
                       return const NearbyPlaceCard();

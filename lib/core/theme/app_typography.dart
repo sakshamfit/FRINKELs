@@ -52,8 +52,12 @@ abstract class AppTypography {
 
   /// Get theme-aware text styles
   static TextTheme getTextTheme(bool isDark) {
-    final baseColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
-    final secondaryColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final baseColor = isDark
+        ? AppColors.textPrimaryDark
+        : AppColors.textPrimary;
+    final secondaryColor = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
 
     return TextTheme(
       displayLarge: title.copyWith(color: baseColor),

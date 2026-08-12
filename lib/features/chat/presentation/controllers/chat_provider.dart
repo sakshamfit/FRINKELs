@@ -26,7 +26,8 @@ class ChatMessagesState {
   final bool isTyping;
   final String? otherUserStatus;
   final DateTime? otherUserLastSeen;
-  final Map<String, List<Map<String, dynamic>>> reactions; // messageId -> list of reactions
+  final Map<String, List<Map<String, dynamic>>>
+  reactions; // messageId -> list of reactions
 
   const ChatMessagesState({
     required this.messages,
@@ -62,14 +63,20 @@ class ChatMessagesState {
   }
 }
 
-final chatMessagesProvider = StateNotifierProvider.family<ChatMessagesNotifier, ChatMessagesState, String>((ref, otherUserId) {
-  final currentUserId = ref.read(authControllerProvider).state.user?.id ?? '';
-  return ChatMessagesNotifier(
-    ref.read(chatRepositoryProvider),
-    otherUserId,
-    currentUserId,
-  );
-});
+final chatMessagesProvider =
+    StateNotifierProvider.family<
+      ChatMessagesNotifier,
+      ChatMessagesState,
+      String
+    >((ref, otherUserId) {
+      final currentUserId =
+          ref.read(authControllerProvider).state.user?.id ?? '';
+      return ChatMessagesNotifier(
+        ref.read(chatRepositoryProvider),
+        otherUserId,
+        currentUserId,
+      );
+    });
 
 class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   final ChatRepository _repository;
@@ -82,7 +89,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   Timer? _typingTimer;
 
   ChatMessagesNotifier(this._repository, this._otherUserId, this._currentUserId)
-      : super(const ChatMessagesState(messages: [])) {
+    : super(const ChatMessagesState(messages: [])) {
     _loadInitialMessages();
     _subscribeToTypingIndicators();
     _subscribeToPresence();
@@ -94,36 +101,44 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
 
     final messagesStream = _repository.getMessages(_otherUserId, limit: 50);
 
-    _messageSubscription = messagesStream.listen((messages) {
-      if (messages.isNotEmpty) {
-        state = state.copyWith(
-          messages: messages,
-          hasMore: messages.length == 50,
-          isLoadingMore: false,
-          lastMessageId: messages.last.id,
-        );
-        _fetchReactionsForMessages(messages);
-      }
-    }, onError: (error) {
-      // Handle error
-    });
+    _messageSubscription = messagesStream.listen(
+      (messages) {
+        if (messages.isNotEmpty) {
+          state = state.copyWith(
+            messages: messages,
+            hasMore: messages.length == 50,
+            isLoadingMore: false,
+            lastMessageId: messages.last.id,
+          );
+          _fetchReactionsForMessages(messages);
+        }
+      },
+      onError: (error) {
+        // Handle error
+      },
+    );
   }
 
   void _subscribeToTypingIndicators() {
     _typingSubscription?.cancel();
-    _typingSubscription = _repository.getTypingIndicators(_getConversationId()).listen((typingUsers) {
-      final isTyping = typingUsers.any((userId) => userId == _otherUserId);
-      state = state.copyWith(isTyping: isTyping);
-    });
+    _typingSubscription = _repository
+        .getTypingIndicators(_getConversationId())
+        .listen((typingUsers) {
+          final isTyping = typingUsers.any((userId) => userId == _otherUserId);
+          state = state.copyWith(isTyping: isTyping);
+        });
   }
 
   void _subscribeToPresence() {
     _presenceSubscription?.cancel();
-    _presenceSubscription = _repository.getPresence(_otherUserId).listen((presenceData) {
+    _presenceSubscription = _repository.getPresence(_otherUserId).listen((
+      presenceData,
+    ) {
       if (presenceData != null) {
         state = state.copyWith(
           otherUserStatus: presenceData,
-          otherUserLastSeen: null, // String status doesn't provide last seen timestamp
+          otherUserLastSeen:
+              null, // String status doesn't provide last seen timestamp
         );
       }
     });
@@ -145,7 +160,13 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     state = state.copyWith(isLoadingMore: true);
 
     try {
-      final moreMessages = await _repository.getMessages(_otherUserId, limit: 50, beforeMessageId: state.lastMessageId).first;
+      final moreMessages = await _repository
+          .getMessages(
+            _otherUserId,
+            limit: 50,
+            beforeMessageId: state.lastMessageId,
+          )
+          .first;
 
       if (moreMessages.isNotEmpty) {
         final newMessages = [...moreMessages, ...state.messages];
@@ -164,11 +185,27 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     }
   }
 
-  Future<void> sendMessage(String receiverId, String content,
-      {String? imageUrl, String? videoUrl, String? voiceUrl, String? fileUrl, String? stickerPackId, String? stickerId}) async {
+  Future<void> sendMessage(
+    String receiverId,
+    String content, {
+    String? imageUrl,
+    String? videoUrl,
+    String? voiceUrl,
+    String? fileUrl,
+    String? stickerPackId,
+    String? stickerId,
+  }) async {
     try {
-      await _repository.sendMessage(receiverId, content,
-          imageUrl: imageUrl, videoUrl: videoUrl, voiceUrl: voiceUrl, fileUrl: fileUrl, stickerPackId: stickerPackId, stickerId: stickerId);
+      await _repository.sendMessage(
+        receiverId,
+        content,
+        imageUrl: imageUrl,
+        videoUrl: videoUrl,
+        voiceUrl: voiceUrl,
+        fileUrl: fileUrl,
+        stickerPackId: stickerPackId,
+        stickerId: stickerId,
+      );
       stopTyping();
     } catch (e) {
       rethrow;
@@ -176,7 +213,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   }
 
   Future<void> _fetchReactionsForMessages(List<Message> messages) async {
-    final reactionsMap = <String, List<Map<String, dynamic>>> {};
+    final reactionsMap = <String, List<Map<String, dynamic>>>{};
     for (final message in messages) {
       try {
         final reactions = await _repository.getReactions(message.id).first;

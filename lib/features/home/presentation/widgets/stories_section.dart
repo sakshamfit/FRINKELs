@@ -84,7 +84,8 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
             itemBuilder: (context, index) {
               final story = stories[index];
               final isViewed = story.isViewed;
-              final isOwnStory = story.userId ==
+              final isOwnStory =
+                  story.userId ==
                   ref.read(authControllerProvider).state.user?.id;
 
               return GestureDetector(
@@ -107,13 +108,14 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
                               shape: BoxShape.circle,
                               gradient: LinearGradient(
                                 colors: isOwnStory
-                                    ? [
-                                        AppColors.primary,
-                                        AppColors.secondary
-                                      ]
+                                    ? [AppColors.primary, AppColors.secondary]
                                     : [
-                                        AppColors.primary.withValues(alpha: 0.3),
-                                        AppColors.secondary.withValues(alpha: 0.3)
+                                        AppColors.primary.withValues(
+                                          alpha: 0.3,
+                                        ),
+                                        AppColors.secondary.withValues(
+                                          alpha: 0.3,
+                                        ),
                                       ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
@@ -142,7 +144,10 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.accent,
-                                  border: Border.all(color: Colors.white, width: 2),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
                                 ),
                               ),
                             ),

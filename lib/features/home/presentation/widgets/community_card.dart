@@ -35,7 +35,8 @@ class CommunityCard extends StatelessWidget {
                       ? AppColors.cardDark.withValues(alpha: 0.2)
                       : AppColors.cardLight.withValues(alpha: 0.2),
                 ),
-                child: community.iconUrl != null && community.iconUrl!.isNotEmpty
+                child:
+                    community.iconUrl != null && community.iconUrl!.isNotEmpty
                     ? ClipOval(
                         child: Image.network(
                           community.iconUrl!,
@@ -44,18 +45,20 @@ class CommunityCard extends StatelessWidget {
                             if (loadingProgress == null) return child;
                             return Center(
                               child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
                                     ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
+                                          loadingProgress.expectedTotalBytes!
                                     : null,
                               ),
                             );
                           },
-                          errorBuilder: (context, error, stackTrace) => const Icon(
-                            LucideIcons.users,
-                            size: 24,
-                            color: Colors.white54,
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                LucideIcons.users,
+                                size: 24,
+                                color: Colors.white54,
+                              ),
                         ),
                       )
                     : const Icon(
@@ -83,7 +86,9 @@ class CommunityCard extends StatelessWidget {
                 '${community.memberCount}',
                 style: TextStyle(
                   fontSize: 10,
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),

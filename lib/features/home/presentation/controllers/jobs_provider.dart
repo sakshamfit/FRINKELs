@@ -4,9 +4,11 @@ import '../../../jobs/domain/entities/job.dart';
 import '../../domain/repositories/feed_repository.dart';
 import 'home_provider.dart';
 
-final jobsProvider = StateNotifierProvider<JobsNotifier, AsyncValue<List<Job>>>((ref) {
-  return JobsNotifier(ref.read(feedRepositoryProvider));
-});
+final jobsProvider = StateNotifierProvider<JobsNotifier, AsyncValue<List<Job>>>(
+  (ref) {
+    return JobsNotifier(ref.read(feedRepositoryProvider));
+  },
+);
 
 class JobsNotifier extends StateNotifier<AsyncValue<List<Job>>> {
   final FeedRepository _repository;
@@ -19,9 +21,13 @@ class JobsNotifier extends StateNotifier<AsyncValue<List<Job>>> {
   Future<void> loadJobs({String? category, double? minSalary}) async {
     state = const AsyncValue.loading();
     try {
-      final result = await _repository.getJobs(category: category, minSalary: minSalary);
+      final result = await _repository.getJobs(
+        category: category,
+        minSalary: minSalary,
+      );
       result.fold(
-        (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+        (failure) =>
+            state = AsyncValue.error(failure.message, StackTrace.current),
         (jobs) => state = AsyncValue.data(jobs),
       );
     } catch (e, stackTrace) {

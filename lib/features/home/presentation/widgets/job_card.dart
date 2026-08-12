@@ -8,11 +8,7 @@ class JobCard extends StatelessWidget {
   final Job job;
   final VoidCallback onTap;
 
-  const JobCard({
-    super.key,
-    required this.job,
-    required this.onTap,
-  });
+  const JobCard({super.key, required this.job, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +30,8 @@ class JobCard extends StatelessWidget {
                     ? AppColors.cardDark.withValues(alpha: 0.2)
                     : AppColors.cardLight.withValues(alpha: 0.2),
               ),
-              child: job.companyLogoUrl != null && job.companyLogoUrl!.isNotEmpty
+              child:
+                  job.companyLogoUrl != null && job.companyLogoUrl!.isNotEmpty
                   ? ClipOval(
                       child: Image.network(
                         job.companyLogoUrl!,
@@ -45,16 +42,17 @@ class JobCard extends StatelessWidget {
                             child: CircularProgressIndicator(
                               value: loadingProgress.expectedTotalBytes != null
                                   ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
+                                        loadingProgress.expectedTotalBytes!
                                   : null,
                             ),
                           );
                         },
-                        errorBuilder: (context, error, stackTrace) => const Icon(
-                          LucideIcons.briefcase,
-                          size: 24,
-                          color: Colors.white54,
-                        ),
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                              LucideIcons.briefcase,
+                              size: 24,
+                              color: Colors.white54,
+                            ),
                       ),
                     )
                   : const Icon(
@@ -84,7 +82,9 @@ class JobCard extends StatelessWidget {
                   : job.companyName,
               style: TextStyle(
                 fontSize: 8,
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -96,7 +96,9 @@ class JobCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 9,
                 fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),

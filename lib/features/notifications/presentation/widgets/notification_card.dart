@@ -150,10 +150,14 @@ class NotificationCard extends ConsumerWidget {
                     Text(
                       _getNotificationTitle(),
                       style: AppTypography.body.copyWith(
-                        fontWeight: isRead ? FontWeight.normal : FontWeight.w600,
+                        fontWeight: isRead
+                            ? FontWeight.normal
+                            : FontWeight.w600,
                         color: isDark
                             ? Colors.white.withValues(alpha: isRead ? 0.7 : 0.9)
-                            : Colors.black.withValues(alpha: isRead ? 0.7 : 0.9),
+                            : Colors.black.withValues(
+                                alpha: isRead ? 0.7 : 0.9,
+                              ),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -177,7 +181,9 @@ class NotificationCard extends ConsumerWidget {
                   top: 0,
                   child: IconButton(
                     icon: const Icon(Icons.check, size: 16),
-                    color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.grey[400],
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.5)
+                        : Colors.grey[400],
                     onPressed: onMarkAsRead,
                   ),
                 ),
