@@ -1,5 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
-
 class FirebaseOptions {
   static FirebaseOptions get currentPlatform {
     // Default to web/fallback values

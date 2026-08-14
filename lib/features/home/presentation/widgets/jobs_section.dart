@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/glass_card.dart';
@@ -36,7 +37,7 @@ class JobsSection extends ConsumerWidget {
                 child: JobCard(
                   job: job,
                   onTap: () {
-                    // TODO: Navigate to job detail screen
+                    context.go('/job/${job.id}');
                   },
                 ),
               );

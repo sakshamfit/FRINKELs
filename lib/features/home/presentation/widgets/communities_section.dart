@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/glass_card.dart';
@@ -36,8 +37,7 @@ class CommunitiesSection extends ConsumerWidget {
                 child: CommunityCard(
                   community: community,
                   onTap: () {
-                    // TODO: Navigate to community screen
-                    // context.go('/community/${community.id}');
+                    context.go('/community/${community.id}');
                   },
                 ),
               );

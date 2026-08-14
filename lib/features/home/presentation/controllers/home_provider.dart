@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dartz/dartz.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:async';
 import '../../../auth/presentation/controllers/auth_provider.dart';
 import '../../../auth/domain/entities/user.dart' as auth_user;
@@ -14,9 +13,10 @@ final feedRepositoryProvider = Provider<FeedRepository>((ref) {
   return FeedRepositoryImpl(supabase);
 });
 
-final feedProvider = StateNotifierProvider<FeedNotifier, AsyncValue<List<Post>>>((ref) {
-  return FeedNotifier(ref.read(feedRepositoryProvider));
-});
+final feedProvider =
+    StateNotifierProvider<FeedNotifier, AsyncValue<List<Post>>>((ref) {
+      return FeedNotifier(ref.read(feedRepositoryProvider));
+    });
 
 class FeedNotifier extends StateNotifier<AsyncValue<List<Post>>> {
   final FeedRepository _repository;
@@ -29,7 +29,8 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<Post>>> {
   void _initFeedSubscription() {
     _feedSubscription = _repository.getFeedStream().listen((result) {
       result.fold(
-        (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+        (failure) =>
+            state = AsyncValue.error(failure.message, StackTrace.current),
         (posts) => state = AsyncValue.data(posts),
       );
     });
@@ -44,7 +45,8 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<Post>>> {
   Future<void> refreshFeed() async {
     final result = await _repository.getFeed();
     result.fold(
-      (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+      (failure) =>
+          state = AsyncValue.error(failure.message, StackTrace.current),
       (posts) => state = AsyncValue.data(posts),
     );
   }
@@ -61,11 +63,10 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<Post>>> {
   }
 }
 
-final nearbyProfessionalsProvider = FutureProvider<List<auth_user.User>>((ref) async {
+final nearbyProfessionalsProvider = FutureProvider<List<auth_user.User>>((
+  ref,
+) async {
   final repository = ref.read(feedRepositoryProvider);
   final result = await repository.getNearbyProfessionals();
-  return result.fold(
-    (failure) => throw failure.message,
-    (users) => users,
-  );
+  return result.fold((failure) => throw failure.message, (users) => users);
 });

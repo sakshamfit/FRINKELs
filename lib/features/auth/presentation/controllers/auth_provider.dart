@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import '../../data/datasources/auth_remote_data_source.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/repositories/user_repository.dart';
@@ -15,16 +14,9 @@ import '../controllers/auth_controller.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 
-// Supabase client provider
-final supabaseProvider = Provider<SupabaseClient>((ref) {
-  // Initialize Supabase if not already done
-  return Supabase.instance.client;
-});
-
 // Remote data source provider
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
-  final supabase = ref.read(supabaseProvider);
-  return SupabaseAuthRemoteDataSource(supabase);
+  return ClerkAuthRemoteDataSource();
 });
 
 // Repository provider

@@ -8,6 +8,10 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Frinkels</string>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+	    <string>webcredentials:${PRODUCT_BUNDLE_IDENTIFIER}</string>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

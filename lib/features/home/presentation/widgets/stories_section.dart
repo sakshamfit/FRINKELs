@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../controllers/stories_provider.dart';
@@ -16,7 +17,7 @@ class StoriesSection extends ConsumerStatefulWidget {
 
 class _StoriesSectionState extends ConsumerState<StoriesSection> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final storiesState = ref.watch(storiesProvider);
 
@@ -53,7 +54,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
               ),
               TextButton.icon(
                 onPressed: () {
-                  // TODO: Navigate to create story screen
+                  context.go('/create-story');
                 },
                 icon: const Icon(
                   LucideIcons.circle_plus,
@@ -89,7 +90,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
 
               return GestureDetector(
                 onTap: () {
-                  // TODO: Navigate to StoryViewPage
+                  context.go('/story/${story.id}');
                 },
                 child: Container(
                   width: 60,
@@ -197,4 +198,3 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
       ),
     );
   }
-}

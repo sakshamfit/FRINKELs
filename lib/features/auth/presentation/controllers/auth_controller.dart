@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide User;
+import 'package:clerk_flutter/clerk_flutter.dart';
 
 import '../../domain/entities/user.dart';
 import '../../domain/usecases/get_current_user.dart' as get_current_user;
@@ -73,33 +73,12 @@ class AuthController extends ChangeNotifier {
     required this.updateUserProfileUseCase,
     required this.completeOnboardingUseCase,
   }) {
-    _authStateSubscription = Supabase.instance.client.auth.onAuthStateChange
-        .listen((data) {
-      final session = data.session;
-      final sbUser = session?.user; // Renamed to avoid conflict
-
-      // Update our state based on Supabase session
-      if (sbUser != null) {
-        final metadata = sbUser.userMetadata ?? {};
+    _authStateSubscription = Clerk.userFlow.listen((clerkUser) {
+      // Update our state based on Clerk user
+      if (clerkUser != null) {
         _state = _state.copyWith(
           isAuthenticated: true,
-          user: User(
-            id: sbUser.id,
-            email: sbUser.email ?? '',
-            name: metadata['full_name'] as String?,
-            username: metadata['username'] as String?,
-            profession: metadata['profession'] as String?,
-            skills: (metadata['skills'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-            interests: (metadata['interests'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-            bio: metadata['bio'] as String?,
-            location: metadata['location'] as String?,
-            availability: metadata['availability'] as String?,
-            avatarUrl: metadata['avatar_url'] as String?,
-            coverUrl: metadata['cover_url'] as String?,
-            emailVerified: sbUser.emailConfirmedAt != null,
-            isOnboarded: metadata['is_onboarded'] as bool? ?? false,
-            createdAt: sbUser.createdAt != null ? DateTime.parse(sbUser.createdAt) : DateTime.now(),
-          ),
+          user: _mapClerkUserToUser(clerkUser),
         );
       } else {
         _state = _state.copyWith(
@@ -109,6 +88,38 @@ class AuthController extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  User _mapClerkUserToUser(ClerkUser user) {
+    return User(
+      id: user.id,
+      email: user.emailAddress,
+      name: user.firstName?.isNotEmpty == true || user.lastName?.isNotEmpty == true
+          ? '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim()
+          : null,
+      username: user.username,
+      profession: user.publicMetadata['profession'] as String?,
+      skills: (user.publicMetadata['skills'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      interests: (user.publicMetadata['interests'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      bio: user.publicMetadata['bio'] as String?,
+      location: user.publicMetadata['location'] as String?,
+      availability: user.publicMetadata['availability'] as String?,
+      avatarUrl: user.imageUrl,
+      coverUrl: user.publicMetadata['cover_url'] as String?,
+      emailVerified: user.emailAddress != null &&
+                     (user.emailAddressVerifiedAt != null ||
+                      user.primaryEmailAddressID != null),
+      isOnboarded: user.publicMetadata['is_onboarded'] as bool? ?? false,
+      createdAt: user.createdAt != null
+          ? DateTime.parse(user.createdAt)
+          : DateTime.now(),
+    );
   }
 
   @override

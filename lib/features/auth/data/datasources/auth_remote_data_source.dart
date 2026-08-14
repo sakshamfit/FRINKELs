@@ -32,8 +32,16 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
       name: metadata['full_name'] as String?,
       username: metadata['username'] as String?,
       profession: metadata['profession'] as String?,
-      skills: (metadata['skills'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      interests: (metadata['interests'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      skills:
+          (metadata['skills'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      interests:
+          (metadata['interests'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       bio: metadata['bio'] as String?,
       location: metadata['location'] as String?,
       availability: metadata['availability'] as String?,
@@ -41,7 +49,7 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
       coverUrl: metadata['cover_url'] as String?,
       emailVerified: user.emailConfirmedAt != null,
       isOnboarded: metadata['is_onboarded'] as bool? ?? false,
-      createdAt: user.createdAt != null ? DateTime.parse(user.createdAt) : DateTime.now(),
+      createdAt: DateTime.parse(user.createdAt),
     );
   }
 
@@ -55,10 +63,7 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
       final response = await supabaseClient.auth.signUp(
         email: email,
         password: password,
-        data: {
-          'full_name': displayName,
-          'is_onboarded': false,
-        },
+        data: {'full_name': displayName, 'is_onboarded': false},
       );
 
       final sb.User? user = response.user;
@@ -100,7 +105,8 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
     try {
       // 1. Google Sign In
       final GoogleSignIn googleSignIn = GoogleSignIn(
-        serverClientId: '570972122297-hi52i3d0ee6kiahslits622ubd9easdf.apps.googleusercontent.com',
+        serverClientId:
+            '570972122297-hi52i3d0ee6kiahslits622ubd9easdf.apps.googleusercontent.com',
       );
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
@@ -108,7 +114,8 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
       }
 
       // 2. Firebase Auth
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final String? idToken = googleAuth.idToken;
       final String? accessToken = googleAuth.accessToken;
 
@@ -116,24 +123,28 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
         throw const ServerFailure(message: 'Google ID Token is null');
       }
 
-      final firebase.AuthCredential credential = firebase.GoogleAuthProvider.credential(
-        accessToken: accessToken,
-        idToken: idToken,
-      );
+      final firebase.AuthCredential credential =
+          firebase.GoogleAuthProvider.credential(
+            accessToken: accessToken,
+            idToken: idToken,
+          );
 
-      final firebase.UserCredential firebaseUserCredential = 
-          await firebase.FirebaseAuth.instance.signInWithCredential(credential);
-      
+      final firebase.UserCredential firebaseUserCredential = await firebase
+          .FirebaseAuth
+          .instance
+          .signInWithCredential(credential);
+
       final firebase.User? firebaseUser = firebaseUserCredential.user;
       if (firebaseUser == null) {
         throw const ServerFailure(message: 'Firebase Authentication failed');
       }
 
       // 3. Supabase Auth with ID Token
-      final sb.AuthResponse response = await supabaseClient.auth.signInWithIdToken(
-        provider: sb.OAuthProvider.google,
-        idToken: idToken,
-      );
+      final sb.AuthResponse response = await supabaseClient.auth
+          .signInWithIdToken(
+            provider: sb.OAuthProvider.google,
+            idToken: idToken,
+          );
 
       final sb.User? user = response.user;
       if (user == null) {
@@ -157,7 +168,8 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
         supabaseClient.auth.signOut(),
         firebase.FirebaseAuth.instance.signOut(),
         GoogleSignIn(
-          serverClientId: '570972122297-hi52i3d0ee6kiahslits622ubd9easdf.apps.googleusercontent.com',
+          serverClientId:
+              '570972122297-hi52i3d0ee6kiahslits622ubd9easdf.apps.googleusercontent.com',
         ).signOut(),
       ]);
     } on sb.AuthException catch (e) {
@@ -207,9 +219,6 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
 
   @override
   Future<User> completeOnboarding(Map<String, dynamic> onboardingData) async {
-    return updateUserProfile({
-      ...onboardingData,
-      'is_onboarded': true,
-    });
+    return updateUserProfile({...onboardingData, 'is_onboarded': true});
   }
 }

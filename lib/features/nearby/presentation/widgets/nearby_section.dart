@@ -24,7 +24,8 @@ class NearbySection extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  // TODO: Navigate to full nearby screen
+                  // Navigate to full nearby screen
+                  context.go('/nearby');
                 },
                 child: Text(
                   'See All',

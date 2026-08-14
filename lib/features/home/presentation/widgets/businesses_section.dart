@@ -36,8 +36,7 @@ class BusinessesSection extends ConsumerWidget {
                 child: BusinessCard(
                   business: business,
                   onTap: () {
-                    // TODO: Navigate to business profile screen
-                    // context.go('/business/${business.id}');
+                    context.go('/business/${business.id}');
                   },
                 ),
               );

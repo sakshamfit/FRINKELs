@@ -17,6 +17,10 @@ import '../../features/documentation/presentation/screens/documentation_screen.d
 import '../../features/documentation/presentation/widgets/documentation_detail.dart';
 import '../widgets/main_layout.dart';
 import '../../features/auth/domain/entities/user.dart' as auth_user;
+import '../../features/home/presentation/widgets/create_story_screen.dart';
+import '../../features/home/presentation/screens/story_view_screen.dart';
+import '../../features/home/presentation/widgets/news_detail_screen.dart';
+import '../../features/home/presentation/widgets/community_screen.dart';
 
 class AppRouter {
   static const String splashPath = '/splash';
@@ -32,6 +36,13 @@ class AppRouter {
   static const String profilePath = '/profile';
   static const String documentationPath = '/documentation';
   static const String documentationDetailPath = '/documentation/:id';
+  static const String jobDetailPath = '/job/:id';
+  static const String createStoryPath = '/create-story';
+  static const String storyViewPath = '/story/:id';
+  static const String newsDetailPath = '/news/:id';
+  static const String communityPath = '/community/:id';
+  static const String businessProfilePath = '/business/:id';
+  static const String nearbyPath = '/nearby';
 
   static final GlobalKey<NavigatorState> _rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -96,6 +107,42 @@ class AppRouter {
         GoRoute(
           path: documentationDetailPath,
           builder: (context, state) => const DocumentationDetail(),
+        ),
+        GoRoute(
+          path: createStoryPath,
+          builder: (context, state) => const CreateStoryScreen(),
+        ),
+        GoRoute(
+          path: storyViewPath,
+          builder: (context, state) {
+            final storyId = state.pathParameters['id'];
+            return StoryViewScreen(storyId: storyId!);
+          },
+        ),
+        GoRoute(
+          path: newsDetailPath,
+          builder: (context, state) {
+            final newsId = state.pathParameters['id'];
+            return NewsDetailScreen(newsId: newsId!);
+          },
+        ),
+        GoRoute(
+          path: communityPath,
+          builder: (context, state) {
+            final communityId = state.pathParameters['id'];
+            return CommunityScreen(communityId: communityId!);
+          },
+        ),
+        GoRoute(
+          path: businessProfilePath,
+          builder: (context, state) {
+            final businessId = state.pathParameters['id'];
+            return BusinessProfileScreen(businessId: businessId!);
+          },
+        ),
+        GoRoute(
+          path: nearbyPath,
+          builder: (context, state) => const NearbyScreen(),
         ),
         GoRoute(
           path: chatPath,

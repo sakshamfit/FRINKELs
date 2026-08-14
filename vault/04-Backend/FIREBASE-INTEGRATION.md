@@ -228,7 +228,9 @@ REACT_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
 ## Authentication Implementation
 
-### User Registration
+> **Note**: While Firebase is still initialized in the FRINKELS app for other services (Analytics, Crashlytics, Performance Monitoring, etc.), **user authentication is now handled by Clerk** as of the latest implementation. The Firebase Authentication code samples below are provided for reference only and are not active in the current application codebase.
+
+### User Registration (Reference - Not Used in Current Implementation)
 ```javascript
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';

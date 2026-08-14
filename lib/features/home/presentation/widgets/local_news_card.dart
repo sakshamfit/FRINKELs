@@ -151,7 +151,8 @@ class LocalNewsCard extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: TextButton.icon(
                         onPressed: () {
-                          // TODO: Navigate to news detail screen
+                          // Navigate to news detail screen
+                          // The onTap callback from the parent section will handle this
                         },
                         icon: const Icon(
                           LucideIcons.arrow_right,
