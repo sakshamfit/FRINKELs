@@ -2,6 +2,35 @@
 
 This document defines the build order and completion status for all 20 feature domains in the FRINKELs platform.
 
+## 🤖 AI Operating System Skills
+The AIOS skills enhance knowledge work and development process:
+- [[vault/AIOS/Skills/knowledge-organizer.md]] - Automatically organize new notes
+- [[vault/AIOS/Skills/link-weaver.md]] - Find opportunities to link related notes
+- [[vault/AIOS/Skills/doc-generator.md]] - Create standardized documentation templates
+- [[vault/AIOS/Skills/error-decoder.md]] - Understand and resolve error messages
+- [[vault/AIOS/Skills/ace-setter.md]] - Set up ACE folder structure (Atlas, Calendar, Efforts)
+- [[vault/AIOS/Skills/daily-brief.md]] - Create daily summary and priorities
+- [[vault/AIOS/Skills/daily-log.md]] - End-of-day reflection and capture
+- [[vault/AIOS/Skills/sherpa.md]] - Guide skill development and learning paths
+- [[vault/AIOS/Skills/style-guide-MOC.md]] - Map of content for writing and communication style
+- [[vault/AIOS/Skills/weekly-review.md]] - Weekly reflection and planning
+- [[vault/AIOS/Skills/rock-tumbler.md]] - Iteratively improve and polish notes
+- [[vault/AIOS/Skills/style-guide-writing-AI.md]] - How I prefer AI to write and communicate
+- [[vault/AIOS/Skills/style-guide-writing-me.md]] - My personal writing and communication preferences
+- [[vault/AIOS/Skills/verbatim.md]] - Capture exact quotes and important text
+- [[vault/AIOS/Skills/summarizer.md]] - Create concise summaries of longer content
+- [[vault/AIOS/Skills/quick-append.md]] - Add content to existing notes
+- [[vault/AIOS/Skills/cascade.md]] - Break down large tasks into manageable steps
+- [[vault/AIOS/Skills/harmonize.md]] - Resolve conflicts and inconsistencies in knowledge
+- [[vault/AIOS/Skills/navigation-janitor.md]] - Improve note discoverability and navigation
+- [[vault/AIOS/Skills/creation-janitor.md]] - Ensure new notes follow conventions
+- [[vault/AIOS/Skills/skills-janitor.md]] - Maintain and improve AI OS skills
+- [[vault/AIOS/Skills/sanitize.md]] - Clean and standardize note formatting
+- [[vault/AIOS/Skills/collator.md]] - Collect and organize related information
+- [[vault/AIOS/Skills/courier.md]] - Deliver and share knowledge from your vault
+- [[vault/AIOS/Templates/]] - AIOS note templates (meeting-notes, retro-template, etc.)
+- [[vault/AIOS/Workflows/]] - Pre-built workflows for common tasks (daily-routine, etc.)
+
 ---
 
 ## 🎯 20 Feature Build Order & Status

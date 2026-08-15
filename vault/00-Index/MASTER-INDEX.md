@@ -2,6 +2,17 @@
 **Maintained by**: Documentation Engineering & Vault Knowledge Graph Group  
 **Target Repository**: FRINKELs (Flutter + Supabase Platform)
 
+## 🤖 AI Operating System Integration
+The AIOS skills enhance knowledge work throughout the vault:
+- [[vault/AIOS/Skills/knowledge-organizer.md]] - Auto-organize new notes
+- [[vault/AIOS/Skills/link-weaver.md]] - Find related note connections
+- [[vault/AIOS/Skills/doc-generator.md]] - Create documentation templates
+- [[vault/AIOS/Skills/daily-brief.md]] & [[vault/AIOS/Skills/daily-log.md]] - Daily planning/reflection cycle
+- [[vault/AIOS/Skills/ace-setter.md]] - Set up ACE knowledge structure
+- [[vault/AIOS/Skills/skills-janitor.md]] - Maintain & improve AIOS skills
+- [[vault/AIOS/Templates/]] - AIOS note templates (meeting-notes, retro-template, etc.)
+- [[vault/AIOS/Workflows/]] - Pre-built workflows for common tasks (daily-routine, etc.)
+
 ---
 
 ## 🕸️ Knowledge Graph Navigation Map

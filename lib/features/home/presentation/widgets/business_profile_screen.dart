@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/glass_card.dart';
@@ -225,7 +226,11 @@ class BusinessProfileScreen extends ConsumerWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // TODO: Implement call business functionality
+                          // Implement call business functionality
+                          final phoneNumber = business.phone.replaceAll(RegExp(r'[^0-9+]'), '');
+                          if (phoneNumber.isNotEmpty) {
+                            launchUrl(Uri(scheme: 'tel', path: phoneNumber));
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.accent,
@@ -239,7 +244,14 @@ class BusinessProfileScreen extends ConsumerWidget {
                     Expanded(
                       child: OutlineButton(
                         onPressed: () {
-                          // TODO: Implement get directions functionality
+                          // Implement get directions functionality
+                          final address = Uri.encodeComponent(business.address);
+                          launchUrl(Uri(
+                            scheme: 'https',
+                            host: 'www.google.com',
+                            path: '/maps/search/',
+                            queryParameters: {'api': '1', 'query': address},
+                          ));
                         },
                         style: OutlineButton.styleFrom(
                           foregroundColor: AppColors.accent,
