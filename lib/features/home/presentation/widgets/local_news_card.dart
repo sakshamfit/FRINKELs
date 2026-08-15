@@ -9,11 +9,7 @@ class LocalNewsCard extends StatelessWidget {
   final LocalNews news;
   final VoidCallback onTap;
 
-  const LocalNewsCard({
-    super.key,
-    required this.news,
-    required this.onTap,
-  });
+  const LocalNewsCard({super.key, required this.news, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -43,23 +39,27 @@ class LocalNewsCard extends StatelessWidget {
                             if (loadingProgress == null) return child;
                             return Center(
                               child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
                                     ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
+                                          loadingProgress.expectedTotalBytes!
                                     : null,
                               ),
                             );
                           },
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            color: isDark
-                                ? AppColors.cardDark.withValues(alpha: 0.2)
-                                : AppColors.cardLight.withValues(alpha: 0.2),
-                            child: const Icon(
-                              LucideIcons.image,
-                              size: 32,
-                              color: Colors.white54,
-                            ),
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                color: isDark
+                                    ? AppColors.cardDark.withValues(alpha: 0.2)
+                                    : AppColors.cardLight.withValues(
+                                        alpha: 0.2,
+                                      ),
+                                child: const Icon(
+                                  LucideIcons.image,
+                                  size: 32,
+                                  color: Colors.white54,
+                                ),
+                              ),
                         )
                       : Container(
                           color: isDark
@@ -79,7 +79,10 @@ class LocalNewsCard extends StatelessWidget {
                   top: 8,
                   left: 8,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.orange.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(4),
@@ -154,10 +157,7 @@ class LocalNewsCard extends StatelessWidget {
                           // Navigate to news detail screen
                           // The onTap callback from the parent section will handle this
                         },
-                        icon: const Icon(
-                          LucideIcons.arrow_right,
-                          size: 14,
-                        ),
+                        icon: const Icon(LucideIcons.arrow_right, size: 14),
                         label: Text(
                           'Read more',
                           style: TextStyle(

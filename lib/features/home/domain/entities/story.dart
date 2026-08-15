@@ -27,16 +27,16 @@ class Story extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        userName,
-        userAvatarUrl,
-        mediaUrl,
-        type,
-        createdAt,
-        expiresAt,
-        isViewed,
-      ];
+    id,
+    userId,
+    userName,
+    userAvatarUrl,
+    mediaUrl,
+    type,
+    createdAt,
+    expiresAt,
+    isViewed,
+  ];
 
   Story copyWith({
     String? id,

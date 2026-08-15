@@ -36,7 +36,7 @@ class _GlassTextFieldState extends State<GlassTextField> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -55,7 +55,9 @@ class _GlassTextFieldState extends State<GlassTextField> {
                 ),
             ],
             // Inset glass effect via border
-            border: isDark ? AppShadows.glassInsetBorderDark : AppShadows.glassInsetBorder,
+            border: isDark
+                ? AppShadows.glassInsetBorderDark
+                : AppShadows.glassInsetBorder,
           ),
           child: Focus(
             onFocusChange: (hasFocus) => setState(() => _isFocused = hasFocus),
@@ -72,40 +74,54 @@ class _GlassTextFieldState extends State<GlassTextField> {
               decoration: InputDecoration(
                 labelText: widget.labelText,
                 hintText: widget.hintText,
-                prefixIcon: widget.prefixIcon != null 
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: IconTheme(
-                        data: IconThemeData(
-                          color: _isFocused 
-                            ? AppColors.accent 
-                            : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
-                          size: 20,
+                prefixIcon: widget.prefixIcon != null
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: IconTheme(
+                          data: IconThemeData(
+                            color: _isFocused
+                                ? AppColors.accent
+                                : (isDark
+                                      ? AppColors.textSecondaryDark
+                                      : AppColors.textSecondary),
+                            size: 20,
+                          ),
+                          child: widget.prefixIcon!,
                         ),
-                        child: widget.prefixIcon!,
-                      ),
-                    )
-                  : null,
+                      )
+                    : null,
                 suffixIcon: widget.isPassword
                     ? IconButton(
                         icon: Icon(
-                          _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                          _obscureText
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: isDark
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondary,
                           size: 20,
                         ),
-                        onPressed: () => setState(() => _obscureText = !_obscureText),
+                        onPressed: () =>
+                            setState(() => _obscureText = !_obscureText),
                       )
                     : null,
                 floatingLabelBehavior: FloatingLabelBehavior.auto,
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 18,
+                ),
                 hintStyle: AppTypography.body.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark.withValues(alpha: 0.4) : AppColors.textSecondary.withValues(alpha: 0.4),
-                  fontSize: 16
+                  color: isDark
+                      ? AppColors.textSecondaryDark.withValues(alpha: 0.4)
+                      : AppColors.textSecondary.withValues(alpha: 0.4),
+                  fontSize: 16,
                 ),
                 labelStyle: AppTypography.body.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary, 
-                  fontSize: 16
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondary,
+                  fontSize: 16,
                 ),
               ),
             ),

@@ -39,20 +39,12 @@ class StoriesNotifier extends StateNotifier<StoriesState> {
     try {
       final result = await _repository.getStories(userId: userId);
       result.fold(
-        (failure) => state = state.copyWith(
-          isLoading: false,
-          error: failure.message,
-        ),
-        (stories) => state = state.copyWith(
-          isLoading: false,
-          stories: stories,
-        ),
+        (failure) =>
+            state = state.copyWith(isLoading: false, error: failure.message),
+        (stories) => state = state.copyWith(isLoading: false, stories: stories),
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -61,6 +53,8 @@ class StoriesNotifier extends StateNotifier<StoriesState> {
   }
 }
 
-final storiesProvider = StateNotifierProvider<StoriesNotifier, StoriesState>((ref) {
+final storiesProvider = StateNotifierProvider<StoriesNotifier, StoriesState>((
+  ref,
+) {
   return StoriesNotifier(ref.read(feedRepositoryProvider));
 });

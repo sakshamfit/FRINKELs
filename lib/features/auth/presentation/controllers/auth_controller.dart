@@ -298,7 +298,9 @@ class AuthController extends ChangeNotifier {
     _state = _state.copyWith(isLoading: true, errorMessage: null);
     notifyListeners();
     try {
-      final result = await updateUserProfileUseCase.call(UpdateUserProfileParams(data: data));
+      final result = await updateUserProfileUseCase.call(
+        UpdateUserProfileParams(data: data),
+      );
       result.fold(
         (failure) => _state = _state.copyWith(
           isLoading: false,

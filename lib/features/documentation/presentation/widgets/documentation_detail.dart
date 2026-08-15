@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/documentation.dart';
 import '../../presentation/controllers/documentation_provider.dart';
 
@@ -15,9 +15,8 @@ class DocumentationDetail extends ConsumerWidget {
     final documentationState = ref.watch(documentationStateNotifierProvider);
 
     return documentationState.when(
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, stackTrace) => Scaffold(
         appBar: AppBar(
           title: const Text('Error'),
@@ -40,7 +39,8 @@ class DocumentationDetail extends ConsumerWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.edit),
-                onPressed: () => _showEditDocumentationDialog(context, ref, doc),
+                onPressed: () =>
+                    _showEditDocumentationDialog(context, ref, doc),
               ),
             ],
           ),
@@ -60,7 +60,7 @@ class DocumentationDetail extends ConsumerWidget {
                 const SizedBox(height: 16),
                 Chip(
                   label: Text(doc.category),
-                  backgroundColor: AppColors.primary.withOpacity(0.1),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                   labelStyle: TextStyle(color: AppColors.primary),
                 ),
                 const SizedBox(height: 16),
@@ -68,11 +68,15 @@ class DocumentationDetail extends ConsumerWidget {
                   Wrap(
                     spacing: 8,
                     children: doc.tags
-                        .map((tag) => Chip(
-                              label: Text(tag),
-                              backgroundColor: AppColors.secondary.withOpacity(0.1),
-                              labelStyle: TextStyle(color: AppColors.secondary),
-                            ))
+                        .map(
+                          (tag) => Chip(
+                            label: Text(tag),
+                            backgroundColor: AppColors.secondary.withValues(
+                              alpha: 0.1,
+                            ),
+                            labelStyle: TextStyle(color: AppColors.secondary),
+                          ),
+                        )
                         .toList(),
                   ),
                   const SizedBox(height: 16),
@@ -111,7 +115,10 @@ class DocumentationDetail extends ConsumerWidget {
   }
 
   void _showEditDocumentationDialog(
-      BuildContext context, WidgetRef ref, Documentation doc) {
+    BuildContext context,
+    WidgetRef ref,
+    Documentation doc,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

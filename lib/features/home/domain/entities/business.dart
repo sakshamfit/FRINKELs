@@ -37,22 +37,22 @@ class Business extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        description,
-        category,
-        address,
-        phone,
-        website,
-        imageUrl,
-        coverImageUrl,
-        rating,
-        reviewCount,
-        isOpen,
-        isVerified,
-        categories,
-        createdAt,
-      ];
+    id,
+    name,
+    description,
+    category,
+    address,
+    phone,
+    website,
+    imageUrl,
+    coverImageUrl,
+    rating,
+    reviewCount,
+    isOpen,
+    isVerified,
+    categories,
+    createdAt,
+  ];
 
   Business copyWith({
     String? id,

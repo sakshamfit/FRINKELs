@@ -17,13 +17,21 @@ class MessagesListScreen extends ConsumerWidget {
     final supabase = ref.read(supabaseProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       appBar: AppBar(
-        title: Text('Messages', style: AppTypography.section.copyWith(fontSize: 24)),
+        title: Text(
+          'Messages',
+          style: AppTypography.section.copyWith(fontSize: 24),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(icon: const Icon(LucideIcons.square_pen), onPressed: () {}),
+          IconButton(
+            icon: const Icon(LucideIcons.square_pen),
+            onPressed: () {},
+          ),
         ],
       ),
       body: FutureBuilder<List<User>>(
@@ -46,32 +54,50 @@ class MessagesListScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final user = users[index];
               return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: GlassCard(
-                  padding: const EdgeInsets.all(16),
-                  child: ListTile(
-                    onTap: () {
-                      // Navigate to chat screen with the selected user
-                      // This would typically use go_router or navigator
-                      // For now, we'll just show a placeholder
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    leading: CircleAvatar(
-                      radius: 28,
-                      backgroundImage: user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
-                      child: user.avatarUrl == null ? const Icon(LucideIcons.user) : null,
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: GlassCard(
+                      padding: const EdgeInsets.all(16),
+                      child: ListTile(
+                        onTap: () {
+                          // Navigate to chat screen with the selected user
+                          // This would typically use go_router or navigator
+                          // For now, we'll just show a placeholder
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(
+                          radius: 28,
+                          backgroundImage: user.avatarUrl != null
+                              ? NetworkImage(user.avatarUrl!)
+                              : null,
+                          child: user.avatarUrl == null
+                              ? const Icon(LucideIcons.user)
+                              : null,
+                        ),
+                        title: Text(
+                          user.name ?? 'Anonymous',
+                          style: AppTypography.body.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Tap to start chatting...',
+                          style: AppTypography.tiny.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Icon(
+                          LucideIcons.chevron_right,
+                          size: 16,
+                          color: AppColors.textSecondary.withValues(alpha: 0.5),
+                        ),
+                      ),
                     ),
-                    title: Text(user.name ?? 'Anonymous', style: AppTypography.body.copyWith(fontWeight: FontWeight.w700)),
-                    subtitle: Text(
-                      'Tap to start chatting...',
-                      style: AppTypography.tiny.copyWith(color: AppColors.textSecondary),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: Icon(LucideIcons.chevron_right, size: 16, color: AppColors.textSecondary.withValues(alpha: 0.5)),
-                  ),
-                ),
-              ).animate().fadeIn(delay: (index * 50).ms).slideX(begin: 0.1, end: 0);
+                  )
+                  .animate()
+                  .fadeIn(delay: (index * 50).ms)
+                  .slideX(begin: 0.1, end: 0);
             },
           );
         },
@@ -82,15 +108,22 @@ class MessagesListScreen extends ConsumerWidget {
   Future<List<User>> _fetchRecentChats(dynamic supabase) async {
     // This should ideally join messages and profiles to get recent chats
     // For now, we'll return some recent users as a placeholder
-    final List<dynamic> data = await supabase.from('profiles').select().limit(5);
-    return data.map((u) => User(
-      id: u['id'],
-      email: u['email'] ?? '',
-      name: u['full_name'],
-      avatarUrl: u['avatar_url'],
-      isOnboarded: true,
-      createdAt: DateTime.parse(u['created_at']),
-    )).toList();
+    final List<dynamic> data = await supabase
+        .from('profiles')
+        .select()
+        .limit(5);
+    return data
+        .map(
+          (u) => User(
+            id: u['id'],
+            email: u['email'] ?? '',
+            name: u['full_name'],
+            avatarUrl: u['avatar_url'],
+            isOnboarded: true,
+            createdAt: DateTime.parse(u['created_at']),
+          ),
+        )
+        .toList();
   }
 
   Widget _buildEmptyState(bool isDark) {
@@ -98,9 +131,16 @@ class MessagesListScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(LucideIcons.message_square, size: 48, color: AppColors.textSecondary.withValues(alpha: 0.3)),
+          Icon(
+            LucideIcons.message_square,
+            size: 48,
+            color: AppColors.textSecondary.withValues(alpha: 0.3),
+          ),
           const SizedBox(height: 16),
-          Text('No conversations yet', style: AppTypography.body.copyWith(color: AppColors.textSecondary)),
+          Text(
+            'No conversations yet',
+            style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+          ),
         ],
       ),
     );

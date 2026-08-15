@@ -30,8 +30,8 @@ class NearbySection extends StatelessWidget {
                 child: Text(
                   'See All',
                   style: AppTypography.caption.copyWith(
-            color: AppColors.accent,
-          ),
+                    color: AppColors.accent,
+                  ),
                 ),
               ),
             ],

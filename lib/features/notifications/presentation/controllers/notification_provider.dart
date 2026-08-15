@@ -13,13 +13,12 @@ final supabaseProvider = Provider<SupabaseClient>((ref) {
 // Remote data source provider
 final notificationRemoteDataSourceProvider =
     Provider<NotificationRemoteDataSource>((ref) {
-  final supabase = ref.watch(supabaseProvider);
-  return NotificationRemoteDataSource(supabase);
-});
+      final supabase = ref.watch(supabaseProvider);
+      return NotificationRemoteDataSource(supabase);
+    });
 
 // Repository provider
-final notificationRepositoryProvider =
-    Provider<NotificationRepository>((ref) {
+final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   final remoteDataSource = ref.watch(notificationRemoteDataSourceProvider);
   return NotificationRepositoryImpl(remoteDataSource);
 });
@@ -82,10 +81,7 @@ class NotificationsNotifier extends StateNotifier<NotificationsState> {
 
       result.fold(
         (failure) {
-          state = state.copyWith(
-            isLoading: false,
-            error: failure.message,
-          );
+          state = state.copyWith(isLoading: false, error: failure.message);
         },
         (notifications) {
           state = state.copyWith(
@@ -100,10 +96,7 @@ class NotificationsNotifier extends StateNotifier<NotificationsState> {
         },
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     } finally {
       _isLoading = false;
     }
@@ -169,9 +162,9 @@ class NotificationsNotifier extends StateNotifier<NotificationsState> {
 // Provider for the notifier
 final notificationsProvider =
     StateNotifierProvider<NotificationsNotifier, NotificationsState>((ref) {
-  final repository = ref.watch(notificationRepositoryProvider);
-  return NotificationsNotifier(repository);
-});
+      final repository = ref.watch(notificationRepositoryProvider);
+      return NotificationsNotifier(repository);
+    });
 
 // Provider for notifications list (for easy access)
 final notificationsListProvider = Provider<List<Notification>>((ref) {
@@ -201,8 +194,5 @@ final notificationsHasMoreProvider = Provider<bool>((ref) {
 final unreadCountProvider = FutureProvider<int>((ref) async {
   final repository = ref.watch(notificationRepositoryProvider);
   final result = await repository.getUnreadCount();
-  return result.fold(
-    (failure) => 0,
-    (count) => count,
-  );
+  return result.fold((failure) => 0, (count) => count);
 });

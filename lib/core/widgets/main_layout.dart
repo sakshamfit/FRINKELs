@@ -8,10 +8,7 @@ import '../theme/app_shadows.dart';
 class MainLayout extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
-  const MainLayout({
-    super.key,
-    required this.navigationShell,
-  });
+  const MainLayout({super.key, required this.navigationShell});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +16,11 @@ class MainLayout extends StatelessWidget {
 
     return Scaffold(
       extendBody: true, // Allow body to flow behind glass bottom bar
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       body: navigationShell,
-      bottomNavigationBar: _PremiumBottomBar(
-        navigationShell: navigationShell,
-      ),
+      bottomNavigationBar: _PremiumBottomBar(navigationShell: navigationShell),
     );
   }
 }
@@ -41,10 +38,14 @@ class _PremiumBottomBar extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(24, 0, 24, 32),
       height: 72,
       decoration: BoxDecoration(
-        color: (isDark ? AppColors.cardDark : Colors.white).withValues(alpha: 0.9),
+        color: (isDark ? AppColors.cardDark : Colors.white).withValues(
+          alpha: 0.9,
+        ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: isDark ? AppShadows.premiumDark : AppShadows.premium,
-        border: isDark ? AppShadows.glassInsetBorderDark : AppShadows.glassInsetBorder,
+        border: isDark
+            ? AppShadows.glassInsetBorderDark
+            : AppShadows.glassInsetBorder,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -73,11 +74,11 @@ class _PremiumBottomBar extends StatelessWidget {
         ],
       ),
     ).animate().slideY(
-          begin: 1.0, 
-          end: 0, 
-          duration: 400.ms, 
-          curve: Curves.easeOutCubic,
-        );
+      begin: 1.0,
+      end: 0,
+      duration: 400.ms,
+      curve: Curves.easeOutCubic,
+    );
   }
 
   Widget _buildPostButton(BuildContext context) {
@@ -118,7 +119,9 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final activeColor = AppColors.accent;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final inactiveColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final inactiveColor = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
 
     return GestureDetector(
       onTap: onTap,
@@ -128,11 +131,9 @@ class _NavItem extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              color: isActive ? activeColor : inactiveColor,
-              size: 24,
-            ).animate(target: isActive ? 1 : 0).scale(
+            Icon(icon, color: isActive ? activeColor : inactiveColor, size: 24)
+                .animate(target: isActive ? 1 : 0)
+                .scale(
                   duration: 200.ms,
                   begin: const Offset(1, 1),
                   end: const Offset(1.15, 1.15),

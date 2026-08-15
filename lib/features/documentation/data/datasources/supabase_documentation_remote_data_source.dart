@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/failures/failure.dart';
 import '../../../../core/services/supabase_service.dart';
 import '../../domain/entities/documentation.dart';
-import '../abstracts/documentation_remote_data_source.dart';
+import 'documentation_remote_data_source.dart';
 
 class SupabaseDocumentationRemoteDataSource
     implements DocumentationRemoteDataSource {
@@ -16,10 +16,6 @@ class SupabaseDocumentationRemoteDataSource
           .select()
           .eq('id', id)
           .single();
-
-      if (response == null) {
-        return Left(ServerFailure(message: 'Documentation not found'));
-      }
 
       final doc = Documentation(
         id: response['id'],
@@ -44,7 +40,9 @@ class SupabaseDocumentationRemoteDataSource
     bool? isPublished,
   }) async {
     try {
-      var query = _supabaseService.supabaseClient.from('documentation').select();
+      var query = _supabaseService.supabaseClient
+          .from('documentation')
+          .select();
 
       if (category != null) {
         query = query.eq('category', category);
@@ -55,26 +53,26 @@ class SupabaseDocumentationRemoteDataSource
 
       final response = await query;
 
-      if (response == null) {
-        return Right([]);
-      }
-
       final List<Documentation> docs = (response as List)
-          .map((doc) => Documentation(
-                id: doc['id'],
-                title: doc['title'],
-                content: doc['content'],
-                category: doc['category'],
-                tags: List<String>.from(doc['tags'] ?? []),
-                createdAt: DateTime.parse(doc['created_at']),
-                updatedAt: DateTime.parse(doc['updated_at']),
-                isPublished: doc['is_published'],
-              ))
+          .map(
+            (doc) => Documentation(
+              id: doc['id'],
+              title: doc['title'],
+              content: doc['content'],
+              category: doc['category'],
+              tags: List<String>.from(doc['tags'] ?? []),
+              createdAt: DateTime.parse(doc['created_at']),
+              updatedAt: DateTime.parse(doc['updated_at']),
+              isPublished: doc['is_published'],
+            ),
+          )
           .toList();
 
       return Right(docs);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to get all documentation: $e'));
+      return Left(
+        ServerFailure(message: 'Failed to get all documentation: $e'),
+      );
     }
   }
 
@@ -95,21 +93,19 @@ class SupabaseDocumentationRemoteDataSource
 
       final response = await searchQuery;
 
-      if (response == null) {
-        return Right([]);
-      }
-
       final List<Documentation> docs = (response as List)
-          .map((doc) => Documentation(
-                id: doc['id'],
-                title: doc['title'],
-                content: doc['content'],
-                category: doc['category'],
-                tags: List<String>.from(doc['tags'] ?? []),
-                createdAt: DateTime.parse(doc['created_at']),
-                updatedAt: DateTime.parse(doc['updated_at']),
-                isPublished: doc['is_published'],
-              ))
+          .map(
+            (doc) => Documentation(
+              id: doc['id'],
+              title: doc['title'],
+              content: doc['content'],
+              category: doc['category'],
+              tags: List<String>.from(doc['tags'] ?? []),
+              createdAt: DateTime.parse(doc['created_at']),
+              updatedAt: DateTime.parse(doc['updated_at']),
+              isPublished: doc['is_published'],
+            ),
+          )
           .toList();
 
       return Right(docs);
@@ -211,10 +207,6 @@ class SupabaseDocumentationRemoteDataSource
       final response = await _supabaseService.supabaseClient
           .from('documentation')
           .select('category');
-
-      if (response == null) {
-        return Right([]);
-      }
 
       final List<String> categories = (response as List)
           .map((doc) => doc['category'] as String)

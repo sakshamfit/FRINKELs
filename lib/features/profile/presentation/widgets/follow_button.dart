@@ -5,11 +5,7 @@ class FollowButton extends StatefulWidget {
   final String userId;
   final bool isSmall;
 
-  const FollowButton({
-    super.key,
-    required this.userId,
-    this.isSmall = false,
-  });
+  const FollowButton({super.key, required this.userId, this.isSmall = false});
 
   @override
   State<FollowButton> createState() => _FollowButtonState();

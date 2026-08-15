@@ -266,7 +266,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return userProfileAsync.when(
       data: (userProfile) => _buildBioContent(userProfile?.bio, isDark),
       loading: () => const SliverToBoxAdapter(child: _BioSkeleton()),
-      error: (error, stack) => SliverToBoxAdapter(child: _BioError(error: error)),
+      error: (error, stack) =>
+          SliverToBoxAdapter(child: _BioError(error: error)),
     );
   }
 
@@ -352,7 +353,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   ) {
     return SliverFillRemaining(
       child: userProfileAsync.when(
-        data: (userProfile) => userProfile != null 
+        data: (userProfile) => userProfile != null
             ? _buildProfileContentContent(userProfile, isDark)
             : const SizedBox.shrink(),
         loading: () => const _ProfileContentSkeleton(),
@@ -659,9 +660,7 @@ class _ProfileContentSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Loading...'),
-    );
+    return const Center(child: Text('Loading...'));
   }
 }
 

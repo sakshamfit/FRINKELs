@@ -35,9 +35,15 @@ class _GlassCardState extends State<GlassCard> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
-      onTapDown: widget.interactive ? (_) => setState(() => _isPressed = true) : null,
-      onTapUp: widget.interactive ? (_) => setState(() => _isPressed = false) : null,
-      onTapCancel: widget.interactive ? () => setState(() => _isPressed = false) : null,
+      onTapDown: widget.interactive
+          ? (_) => setState(() => _isPressed = true)
+          : null,
+      onTapUp: widget.interactive
+          ? (_) => setState(() => _isPressed = false)
+          : null,
+      onTapCancel: widget.interactive
+          ? () => setState(() => _isPressed = false)
+          : null,
       child: AnimatedScale(
         scale: _isPressed ? 0.98 : 1.0,
         duration: const Duration(milliseconds: 180),
@@ -51,15 +57,20 @@ class _GlassCardState extends State<GlassCard> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(widget.borderRadius),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: widget.blur, sigmaY: widget.blur),
+              filter: ImageFilter.blur(
+                sigmaX: widget.blur,
+                sigmaY: widget.blur,
+              ),
               child: Container(
                 padding: widget.padding,
                 decoration: BoxDecoration(
-                  color: isDark 
-                    ? AppColors.cardDark.withValues(alpha: 0.8) 
-                    : AppColors.cardLight.withValues(alpha: 0.8),
+                  color: isDark
+                      ? AppColors.cardDark.withValues(alpha: 0.8)
+                      : AppColors.cardLight.withValues(alpha: 0.8),
                   borderRadius: BorderRadius.circular(widget.borderRadius),
-                  border: isDark ? AppShadows.glassInsetBorderDark : AppShadows.glassInsetBorder,
+                  border: isDark
+                      ? AppShadows.glassInsetBorderDark
+                      : AppShadows.glassInsetBorder,
                 ),
                 child: widget.child,
               ),

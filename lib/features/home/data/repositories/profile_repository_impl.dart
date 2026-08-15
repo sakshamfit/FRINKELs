@@ -20,7 +20,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, List<User>>> getNearbyProfessionals({double? latitude, double? longitude, double radiusKm = 10}) async {
+  Future<Either<Failure, List<User>>> getNearbyProfessionals({
+    double? latitude,
+    double? longitude,
+    double radiusKm = 10,
+  }) async {
     try {
       final users = await remoteDataSource.getNearbyProfessionals(
         latitude: latitude,

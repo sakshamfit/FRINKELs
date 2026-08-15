@@ -50,7 +50,16 @@ class Job extends Equatable {
 
   @override
   List<Object?> get props => [
-    id, title, companyName, companyLogoUrl, description, location,
-    salary, type, postedById, status, createdAt
+    id,
+    title,
+    companyName,
+    companyLogoUrl,
+    description,
+    location,
+    salary,
+    type,
+    postedById,
+    status,
+    createdAt,
   ];
 }

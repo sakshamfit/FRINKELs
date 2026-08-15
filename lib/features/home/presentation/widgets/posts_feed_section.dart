@@ -256,7 +256,8 @@ class _PostCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                if (content is List<String> && (content as List<String>).isNotEmpty)
+                if (content is List<String> &&
+                    (content as List<String>).isNotEmpty)
                   CarouselSlider(
                     options: CarouselOptions(
                       height: 200,

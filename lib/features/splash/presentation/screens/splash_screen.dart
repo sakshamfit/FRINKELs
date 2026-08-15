@@ -53,9 +53,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   begin: const Offset(0.5, 0.5),
                 )
                 .fadeIn(duration: 400.ms),
-            
+
             const SizedBox(height: 24),
-            
+
             Text(
               'FRINKELs',
               style: AppTypography.title.copyWith(
@@ -63,24 +63,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 letterSpacing: -1.0,
                 fontWeight: FontWeight.w700,
               ),
-            )
-            .animate()
-            .fadeIn(delay: 300.ms, duration: 600.ms),
+            ).animate().fadeIn(delay: 300.ms, duration: 600.ms),
 
             const SizedBox(height: 12),
-            
+
             Text(
-              'Find. Connect. Grow.',
-              style: AppTypography.title.copyWith(
-                fontSize: 14,
-                color: AppColors.textSecondary,
-                letterSpacing: 3.0,
-                fontWeight: FontWeight.w600,
-              ),
-            )
-            .animate()
-            .fadeIn(delay: 600.ms, duration: 600.ms)
-            .slideY(begin: 0.2, end: 0, duration: 600.ms, curve: Curves.easeOut),
+                  'Find. Connect. Grow.',
+                  style: AppTypography.title.copyWith(
+                    fontSize: 14,
+                    color: AppColors.textSecondary,
+                    letterSpacing: 3.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+                .animate()
+                .fadeIn(delay: 600.ms, duration: 600.ms)
+                .slideY(
+                  begin: 0.2,
+                  end: 0,
+                  duration: 600.ms,
+                  curve: Curves.easeOut,
+                ),
           ],
         ),
       ),

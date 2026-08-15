@@ -53,7 +53,8 @@ class Message extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
-  final List<String> deletedBy; // list of user IDs who deleted it for themselves
+  final List<String>
+  deletedBy; // list of user IDs who deleted it for themselves
 
   const Message({
     required this.id,
@@ -122,20 +123,28 @@ class Message extends Equatable {
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
       locationTitle: json['location_title'] as String?,
-      contactData: json['contact_data'] != null ? Map<String, dynamic>.from(json['contact_data']) : null,
+      contactData: json['contact_data'] != null
+          ? Map<String, dynamic>.from(json['contact_data'])
+          : null,
       isGif: json['is_gif'] as bool?,
       replyToMessageId: json['reply_to_message_id'] as String?,
       forwardedFromMessageId: json['forwarded_from_message_id'] as String?,
-      editedAt: json['edited_at'] != null ? DateTime.parse(json['edited_at'] as String) : null,
+      editedAt: json['edited_at'] != null
+          ? DateTime.parse(json['edited_at'] as String)
+          : null,
       editedBy: json['edited_by'] as String?,
       stickerPackId: json['sticker_pack_id'] as String?,
       stickerId: json['sticker_id'] as String?,
       pinned: json['pinned'] as bool?,
       pinnedBy: json['pinned_by'] as String?,
-      pinnedAt: json['pinned_at'] != null ? DateTime.parse(json['pinned_at'] as String) : null,
+      pinnedAt: json['pinned_at'] != null
+          ? DateTime.parse(json['pinned_at'] as String)
+          : null,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
-      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at'] as String) : null,
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.parse(json['deleted_at'] as String)
+          : null,
       deletedBy: List<String>.from(json['deleted_by'] ?? []),
     );
   }
@@ -176,34 +185,34 @@ class Message extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        conversationId,
-        senderId,
-        type,
-        content,
-        imageUrls,
-        videoUrl,
-        voiceUrl,
-        fileUrl,
-        gifUrl,
-        duration,
-        latitude,
-        longitude,
-        locationTitle,
-        contactData,
-        isGif,
-        replyToMessageId,
-        forwardedFromMessageId,
-        editedAt,
-        editedBy,
-        stickerPackId,
-        stickerId,
-        pinned,
-        pinnedBy,
-        pinnedAt,
-        createdAt,
-        updatedAt,
-        deletedAt,
-        deletedBy,
-      ];
+    id,
+    conversationId,
+    senderId,
+    type,
+    content,
+    imageUrls,
+    videoUrl,
+    voiceUrl,
+    fileUrl,
+    gifUrl,
+    duration,
+    latitude,
+    longitude,
+    locationTitle,
+    contactData,
+    isGif,
+    replyToMessageId,
+    forwardedFromMessageId,
+    editedAt,
+    editedBy,
+    stickerPackId,
+    stickerId,
+    pinned,
+    pinnedBy,
+    pinnedAt,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    deletedBy,
+  ];
 }

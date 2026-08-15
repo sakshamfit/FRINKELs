@@ -51,7 +51,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void _onMessageChanged() {
     if (_messageController.text.isNotEmpty && !_isTypingInternally) {
       _isTypingInternally = true;
-      ref.read(chatMessagesProvider(widget.otherUser.id).notifier).startTyping();
+      ref
+          .read(chatMessagesProvider(widget.otherUser.id).notifier)
+          .startTyping();
     } else if (_messageController.text.isEmpty && _isTypingInternally) {
       _isTypingInternally = false;
       ref.read(chatMessagesProvider(widget.otherUser.id).notifier).stopTyping();
@@ -77,9 +79,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final chatState = ref.watch(chatMessagesProvider(widget.otherUser.id));
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       appBar: AppBar(
-        backgroundColor: (isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary).withValues(alpha: 0.9),
+        backgroundColor:
+            (isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary)
+                .withValues(alpha: 0.9),
         title: Row(
           children: [
             CircleAvatar(
@@ -87,34 +93,68 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               backgroundImage: widget.otherUser.avatarUrl != null
                   ? NetworkImage(widget.otherUser.avatarUrl!)
                   : null,
-              child: widget.otherUser.avatarUrl == null ? const Icon(LucideIcons.user, size: 18) : null,
+              child: widget.otherUser.avatarUrl == null
+                  ? const Icon(LucideIcons.user, size: 18)
+                  : null,
             ),
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.otherUser.name ?? 'User', style: AppTypography.body.copyWith(fontWeight: FontWeight.w700, fontSize: 15)),
+                Text(
+                  widget.otherUser.name ?? 'User',
+                  style: AppTypography.body.copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                  ),
+                ),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   child: chatState.isTyping
-                      ? Text('typing...', key: const ValueKey('typing'), style: AppTypography.tiny.copyWith(color: AppColors.accent))
+                      ? Text(
+                          'typing...',
+                          key: const ValueKey('typing'),
+                          style: AppTypography.tiny.copyWith(
+                            color: AppColors.accent,
+                          ),
+                        )
                       : chatState.otherUserStatus == 'online'
-                          ? Text('Online', key: const ValueKey('online'), style: AppTypography.tiny.copyWith(color: AppColors.success))
-                          : chatState.otherUserLastSeen != null
-                              ? Text(
-                                  'Last seen ${_formatTimeAgo(chatState.otherUserLastSeen!)}',
-                                  key: const ValueKey('lastSeen'),
-                                  style: AppTypography.tiny.copyWith(color: Colors.grey),
-                                )
-                              : Text('Offline', key: const ValueKey('offline'), style: AppTypography.tiny.copyWith(color: Colors.grey)),
+                      ? Text(
+                          'Online',
+                          key: const ValueKey('online'),
+                          style: AppTypography.tiny.copyWith(
+                            color: AppColors.success,
+                          ),
+                        )
+                      : chatState.otherUserLastSeen != null
+                      ? Text(
+                          'Last seen ${_formatTimeAgo(chatState.otherUserLastSeen!)}',
+                          key: const ValueKey('lastSeen'),
+                          style: AppTypography.tiny.copyWith(
+                            color: Colors.grey,
+                          ),
+                        )
+                      : Text(
+                          'Offline',
+                          key: const ValueKey('offline'),
+                          style: AppTypography.tiny.copyWith(
+                            color: Colors.grey,
+                          ),
+                        ),
                 ),
               ],
             ),
           ],
         ),
         actions: [
-          IconButton(icon: const Icon(LucideIcons.phone, size: 20), onPressed: () {}),
-          IconButton(icon: const Icon(LucideIcons.video, size: 20), onPressed: () {}),
+          IconButton(
+            icon: const Icon(LucideIcons.phone, size: 20),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(LucideIcons.video, size: 20),
+            onPressed: () {},
+          ),
           const SizedBox(width: 8),
         ],
       ),
@@ -126,7 +166,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               reverse: true,
               itemCount: chatState.messages.length,
               itemBuilder: (context, index) {
-                final message = chatState.messages[chatState.messages.length - 1 - index];
+                final message =
+                    chatState.messages[chatState.messages.length - 1 - index];
                 final isMe = message.senderId != widget.otherUser.id;
                 return _buildMessageBubble(message, isMe, isDark);
               },
@@ -148,20 +189,34 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         child: Container(
           margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.75,
+          ),
           decoration: BoxDecoration(
-            color: isMe ? AppColors.accent : (isDark ? AppColors.cardDark : Colors.white),
+            color: isMe
+                ? AppColors.accent
+                : (isDark ? AppColors.cardDark : Colors.white),
             borderRadius: BorderRadius.circular(20).copyWith(
-              bottomRight: isMe ? const Radius.circular(4) : const Radius.circular(20),
-              bottomLeft: isMe ? const Radius.circular(20) : const Radius.circular(4),
+              bottomRight: isMe
+                  ? const Radius.circular(4)
+                  : const Radius.circular(20),
+              bottomLeft: isMe
+                  ? const Radius.circular(20)
+                  : const Radius.circular(4),
             ),
             boxShadow: isMe ? null : AppShadows.premium,
-            border: isMe ? null : (isDark ? AppShadows.glassInsetBorderDark : AppShadows.glassInsetBorder),
+            border: isMe
+                ? null
+                : (isDark
+                      ? AppShadows.glassInsetBorderDark
+                      : AppShadows.glassInsetBorder),
           ),
           child: Text(
             message.content,
             style: AppTypography.body.copyWith(
-              color: isMe ? Colors.white : (isDark ? Colors.white : AppColors.textPrimary),
+              color: isMe
+                  ? Colors.white
+                  : (isDark ? Colors.white : AppColors.textPrimary),
               fontSize: 15,
             ),
           ),
@@ -175,7 +230,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
       decoration: BoxDecoration(
         color: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
-        border: Border(top: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1))),
+        border: Border(
+          top: BorderSide(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.1),
+          ),
+        ),
       ),
       child: Row(
         children: [
@@ -184,10 +245,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.cardDark.withValues(alpha: 0.8) : AppColors.cardLight.withValues(alpha: 0.8),
+                color: isDark
+                    ? AppColors.cardDark.withValues(alpha: 0.8)
+                    : AppColors.cardLight.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Icon(LucideIcons.plus, size: 20, color: Colors.white),
+              child: const Icon(
+                LucideIcons.plus,
+                size: 20,
+                color: Colors.white,
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -202,14 +269,23 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           GestureDetector(
             onTap: () {
               if (_messageController.text.isNotEmpty) {
-                ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(widget.otherUser.id, _messageController.text);
+                ref
+                    .read(chatMessagesProvider(widget.otherUser.id).notifier)
+                    .sendMessage(widget.otherUser.id, _messageController.text);
                 _messageController.clear();
               }
             },
             child: Container(
               padding: const EdgeInsets.all(12),
-              decoration: const BoxDecoration(color: AppColors.accent, shape: BoxShape.circle),
-              child: const Icon(LucideIcons.send, color: Colors.white, size: 20),
+              decoration: const BoxDecoration(
+                color: AppColors.accent,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                LucideIcons.send,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
           ),
         ],
@@ -241,23 +317,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final extension = filePath.split('.').last.toLowerCase();
 
     if (['jpg', 'jpeg', 'png', 'gif', 'webp'].contains(extension)) {
-      await ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(
-        widget.otherUser.id,
-        '',
-        imageUrl: filePath
-      );
+      await ref
+          .read(chatMessagesProvider(widget.otherUser.id).notifier)
+          .sendMessage(widget.otherUser.id, '', imageUrl: filePath);
     } else if (['mp4', 'mov', 'avi'].contains(extension)) {
-      await ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(
-        widget.otherUser.id,
-        '',
-        videoUrl: filePath
-      );
+      await ref
+          .read(chatMessagesProvider(widget.otherUser.id).notifier)
+          .sendMessage(widget.otherUser.id, '', videoUrl: filePath);
     } else {
-      await ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(
-        widget.otherUser.id,
-        '',
-        fileUrl: filePath
-      );
+      await ref
+          .read(chatMessagesProvider(widget.otherUser.id).notifier)
+          .sendMessage(widget.otherUser.id, '', fileUrl: filePath);
     }
   }
 
@@ -273,11 +343,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       final compressed = await _compressImage(File(pickedFile.path));
       if (mounted) {
         final filePath = compressed?.path ?? pickedFile.path;
-        await ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(
-          widget.otherUser.id,
-          '',
-          imageUrl: filePath
-        );
+        await ref
+            .read(chatMessagesProvider(widget.otherUser.id).notifier)
+            .sendMessage(widget.otherUser.id, '', imageUrl: filePath);
       }
     }
   }
@@ -294,11 +362,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       final compressed = await _compressImage(File(pickedFile.path));
       if (mounted) {
         final filePath = compressed?.path ?? pickedFile.path;
-        await ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(
-          widget.otherUser.id,
-          '',
-          imageUrl: filePath
-        );
+        await ref
+            .read(chatMessagesProvider(widget.otherUser.id).notifier)
+            .sendMessage(widget.otherUser.id, '', imageUrl: filePath);
       }
     }
   }
@@ -314,11 +380,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       final compressed = await _compressVideo(File(pickedFile.path));
       if (mounted) {
         final filePath = compressed?.path ?? pickedFile.path;
-        await ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(
-          widget.otherUser.id,
-          '',
-          videoUrl: filePath
-        );
+        await ref
+            .read(chatMessagesProvider(widget.otherUser.id).notifier)
+            .sendMessage(widget.otherUser.id, '', videoUrl: filePath);
       }
     }
   }
@@ -353,7 +417,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       if (permission == LocationPermission.deniedForever) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are permanently denied')),
+            const SnackBar(
+              content: Text('Location permissions are permanently denied'),
+            ),
           );
         }
         return;
@@ -363,21 +429,23 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      await ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(
+      await ref
+          .read(chatMessagesProvider(widget.otherUser.id).notifier)
+          .sendMessage(
             widget.otherUser.id,
             'Shared location: ${position.latitude}, ${position.longitude}',
           );
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location shared')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Location shared')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error getting location: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error getting location: $e')));
       }
     }
   }
@@ -422,21 +490,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<void> _sendGifMessage(String gifUrl) async {
-    await ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(
-      widget.otherUser.id,
-      gifUrl,
-      imageUrl: gifUrl,
-    );
+    await ref
+        .read(chatMessagesProvider(widget.otherUser.id).notifier)
+        .sendMessage(widget.otherUser.id, gifUrl, imageUrl: gifUrl);
     if (mounted) Navigator.of(context).pop();
   }
 
   Future<void> _sendStickerMessage(String stickerPath) async {
-    await ref.read(chatMessagesProvider(widget.otherUser.id).notifier).sendMessage(
-      widget.otherUser.id,
-      '',
-      stickerPackId: 'custom',
-      stickerId: stickerPath.split('/').last.split('.').first,
-    );
+    await ref
+        .read(chatMessagesProvider(widget.otherUser.id).notifier)
+        .sendMessage(
+          widget.otherUser.id,
+          '',
+          stickerPackId: 'custom',
+          stickerId: stickerPath.split('/').last.split('.').first,
+        );
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -491,7 +559,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 },
               ),
             ListTile(
-              leading: Icon(isPinned ? LucideIcons.pin_off : LucideIcons.pin, size: 20),
+              leading: Icon(
+                isPinned ? LucideIcons.pin_off : LucideIcons.pin,
+                size: 20,
+              ),
               title: Text(isPinned ? 'Unpin' : 'Pin'),
               onTap: () {
                 if (mounted) Navigator.pop(context);
@@ -531,8 +602,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<void> _editMessage(Message message) async {
-    final TextEditingController controller =
-        TextEditingController(text: message.content);
+    final TextEditingController controller = TextEditingController(
+      text: message.content,
+    );
     if (!mounted) return;
     await showDialog(
       context: context,
@@ -541,9 +613,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: const InputDecoration(
-            hintText: 'Edit your message',
-          ),
+          decoration: const InputDecoration(hintText: 'Edit your message'),
         ),
         actions: [
           TextButton(
@@ -554,7 +624,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             onPressed: () {
               final String newContent = controller.text.trim();
               if (newContent.isNotEmpty) {
-                ref.read(chatMessagesProvider(widget.otherUser.id).notifier).editMessage(message.id, newContent);
+                ref
+                    .read(chatMessagesProvider(widget.otherUser.id).notifier)
+                    .editMessage(message.id, newContent);
                 Navigator.pop(context);
               }
             },
@@ -587,7 +659,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               Navigator.pop(context);
               await _deleteMessage(message, true);
             },
-            child: const Text('Delete for Everyone', style: TextStyle(color: Colors.red)),
+            child: const Text(
+              'Delete for Everyone',
+              style: TextStyle(color: Colors.red),
+            ),
           ),
           TextButton(
             onPressed: () async {

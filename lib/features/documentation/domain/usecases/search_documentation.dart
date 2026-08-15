@@ -11,6 +11,5 @@ class SearchDocumentation {
   Future<Either<Failure, List<Documentation>>> call(
     String query, {
     String? category,
-  }) =>
-      repository.searchDocumentation(query, category: category);
+  }) => repository.searchDocumentation(query, category: category);
 }

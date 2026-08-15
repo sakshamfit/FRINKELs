@@ -4,9 +4,12 @@ import '../../../home/domain/entities/local_news.dart';
 import '../../domain/repositories/feed_repository.dart';
 import 'home_provider.dart';
 
-final localNewsProvider = StateNotifierProvider<LocalNewsNotifier, AsyncValue<List<LocalNews>>>((ref) {
-  return LocalNewsNotifier(ref.read(feedRepositoryProvider));
-});
+final localNewsProvider =
+    StateNotifierProvider<LocalNewsNotifier, AsyncValue<List<LocalNews>>>((
+      ref,
+    ) {
+      return LocalNewsNotifier(ref.read(feedRepositoryProvider));
+    });
 
 class LocalNewsNotifier extends StateNotifier<AsyncValue<List<LocalNews>>> {
   final FeedRepository _repository;
@@ -19,9 +22,13 @@ class LocalNewsNotifier extends StateNotifier<AsyncValue<List<LocalNews>>> {
   Future<void> loadLocalNews({String? category, String? location}) async {
     state = const AsyncValue.loading();
     try {
-      final result = await _repository.getLocalNews(category: category, location: location);
+      final result = await _repository.getLocalNews(
+        category: category,
+        location: location,
+      );
       result.fold(
-        (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+        (failure) =>
+            state = AsyncValue.error(failure.message, StackTrace.current),
         (localNews) => state = AsyncValue.data(localNews),
       );
     } catch (e, stackTrace) {

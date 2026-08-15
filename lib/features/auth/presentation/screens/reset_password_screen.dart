@@ -32,12 +32,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(LucideIcons.arrow_left, color: isDark ? Colors.white : Colors.black),
+          icon: Icon(
+            LucideIcons.arrow_left,
+            color: isDark ? Colors.white : Colors.black,
+          ),
           onPressed: () => context.go('${AppRouter.authPath}/login'),
         ),
       ),
@@ -48,29 +53,33 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(LucideIcons.key, size: 64, color: AppColors.accent)
-                    .animate()
-                    .scale(duration: 400.ms),
-                
+                const Icon(
+                  LucideIcons.key,
+                  size: 64,
+                  color: AppColors.accent,
+                ).animate().scale(duration: 400.ms),
+
                 const SizedBox(height: 32),
-                
+
                 Text(
                   'Reset password',
                   style: AppTypography.title.copyWith(fontSize: 32),
                 ).animate().fadeIn(delay: 100.ms),
-                
+
                 const SizedBox(height: 12),
-                
+
                 Text(
                   'Enter your email to receive a reset link',
                   style: AppTypography.body.copyWith(
-                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
                   ),
                   textAlign: TextAlign.center,
                 ).animate().fadeIn(delay: 200.ms),
-                
+
                 const SizedBox(height: 48),
-                
+
                 Form(
                   key: _formKey,
                   child: GlassTextField(
@@ -80,9 +89,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     prefixIcon: const Icon(LucideIcons.mail, size: 20),
                   ).animate().fadeIn(delay: 300.ms),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 Consumer(
                   builder: (context, ref, child) {
                     final authState = ref.watch(authControllerProvider).state;
@@ -93,7 +102,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         isLoading: authState.isLoading,
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
-                            ref.read(authControllerProvider).resetPassword(_emailController.text);
+                            ref
+                                .read(authControllerProvider)
+                                .resetPassword(_emailController.text);
                           }
                         },
                       ),

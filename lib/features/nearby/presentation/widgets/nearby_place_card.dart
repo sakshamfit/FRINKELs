@@ -17,7 +17,9 @@ class NearbyPlaceCard extends StatelessWidget {
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 image: DecorationImage(
-                  image: NetworkImage('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4'),
+                  image: NetworkImage(
+                    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4',
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -30,15 +32,15 @@ class NearbyPlaceCard extends StatelessWidget {
               children: [
                 Text(
                   'The Coffee Club',
-                  style: AppTypography.body.copyWith(fontWeight: FontWeight.w600, fontSize: 14),
+                  style: AppTypography.body.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  '0.5 km away',
-                  style: AppTypography.tiny,
-                ),
+                Text('0.5 km away', style: AppTypography.tiny),
               ],
             ),
           ),

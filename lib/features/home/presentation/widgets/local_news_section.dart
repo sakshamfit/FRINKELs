@@ -46,7 +46,8 @@ class LocalNewsSection extends ConsumerWidget {
         ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.05, end: 0);
       },
       loading: () => _buildLoadingState(isDark),
-      error: (error, stackTrace) => _buildErrorState(isDark, error.toString(), ref),
+      error: (error, stackTrace) =>
+          _buildErrorState(isDark, error.toString(), ref),
     );
   }
 
@@ -136,16 +137,14 @@ class LocalNewsSection extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              LucideIcons.cloud_off,
-              size: 32,
-              color: AppColors.error,
-            ),
+            const Icon(LucideIcons.cloud_off, size: 32, color: AppColors.error),
             const SizedBox(height: 12),
             Text(
               'Failed to load local news',
               style: AppTypography.body.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: 8),
@@ -181,7 +180,9 @@ class LocalNewsSection extends ConsumerWidget {
             Text(
               'No local news found',
               style: AppTypography.body.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
               ),
             ),
           ],

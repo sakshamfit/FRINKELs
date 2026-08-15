@@ -9,11 +9,7 @@ class BusinessCard extends StatelessWidget {
   final Business business;
   final VoidCallback onTap;
 
-  const BusinessCard({
-    super.key,
-    required this.business,
-    required this.onTap,
-  });
+  const BusinessCard({super.key, required this.business, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -44,23 +40,29 @@ class BusinessCard extends StatelessWidget {
                               if (loadingProgress == null) return child;
                               return Center(
                                 child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
+                                  value:
+                                      loadingProgress.expectedTotalBytes != null
                                       ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
+                                            loadingProgress.expectedTotalBytes!
                                       : null,
                                 ),
                               );
                             },
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: isDark
-                                  ? AppColors.cardDark.withValues(alpha: 0.2)
-                                  : AppColors.cardLight.withValues(alpha: 0.2),
-                              child: const Icon(
-                                LucideIcons.image,
-                                size: 32,
-                                color: Colors.white54,
-                              ),
-                            ),
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                                  color: isDark
+                                      ? AppColors.cardDark.withValues(
+                                          alpha: 0.2,
+                                        )
+                                      : AppColors.cardLight.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                  child: const Icon(
+                                    LucideIcons.image,
+                                    size: 32,
+                                    color: Colors.white54,
+                                  ),
+                                ),
                           )
                         : Container(
                             color: isDark
@@ -96,7 +98,10 @@ class BusinessCard extends StatelessWidget {
                     bottom: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: business.isOpen
                             ? AppColors.success.withValues(alpha: 0.2)
@@ -171,7 +176,10 @@ class BusinessCard extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: isDark

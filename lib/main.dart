@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:sentry/sentry.dart';
@@ -18,7 +17,7 @@ Future<void> main() async {
 
   try {
     await Firebase.initializeApp(
-      options: FirebaseOptions.currentPlatform,
+      options: DefaultFirebaseOptions.currentPlatform,
     );
   } catch (e) {
     debugPrint('Firebase initialization failed: $e');
@@ -58,7 +57,9 @@ Future<void> main() async {
     supabaseUrl = const String.fromEnvironment('NEXT_PUBLIC_SUPABASE_URL');
   }
   if (supabaseAnonKey.isEmpty) {
-    supabaseAnonKey = const String.fromEnvironment('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY');
+    supabaseAnonKey = const String.fromEnvironment(
+      'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY',
+    );
   }
 
   // Try to get values from environment (for desktop/mobile)
@@ -69,12 +70,16 @@ Future<void> main() async {
   } else {
     // For desktop/mobile, use environment variables if still empty
     if (supabaseUrl.isEmpty) {
-      supabaseUrl = Platform.environment['SUPABASE_URL'] ??
-                    Platform.environment['NEXT_PUBLIC_SUPABASE_URL'] ?? '';
+      supabaseUrl =
+          Platform.environment['SUPABASE_URL'] ??
+          Platform.environment['NEXT_PUBLIC_SUPABASE_URL'] ??
+          '';
     }
     if (supabaseAnonKey.isEmpty) {
-      supabaseAnonKey = Platform.environment['SUPABASE_ANON_KEY'] ??
-                        Platform.environment['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'] ?? '';
+      supabaseAnonKey =
+          Platform.environment['SUPABASE_ANON_KEY'] ??
+          Platform.environment['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'] ??
+          '';
     }
   }
 
@@ -101,4 +106,26 @@ Future<void> main() async {
   );
 
   runApp(const ProviderScope(child: FrinkelsApp()));
+}
+
+class FrinkelsApp extends ConsumerWidget {
+  const FrinkelsApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Watch authControllerProvider to ensure it stays alive throughout the app lifecycle.
+    // If not watched at the root, it may be disposed when moving between routes
+    // (e.g., from Login to Home), causing auth state loss.
+    ref.watch(authControllerProvider);
+
+    final router = ref.watch(routerProvider);
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      title: 'FRINKELs',
+      theme: AppTheme.darkTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
+      routerConfig: router,
+    );
+  }
 }

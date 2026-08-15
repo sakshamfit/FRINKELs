@@ -1,11 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/failures/failure.dart';
 import '../../domain/entities/documentation.dart';
 import '../../domain/repositories/documentation_repository.dart';
 import '../../domain/usecases/get_all_documentation.dart';
 import '../../domain/usecases/get_documentation.dart';
 import '../../domain/usecases/search_documentation.dart';
-import '../repositories/documentation_repository_impl.dart';
+import '../../data/repositories/documentation_repository_impl.dart';
 
 // StateNotifier for documentation state
 class DocumentationStateNotifier
@@ -16,9 +15,9 @@ class DocumentationStateNotifier
 
   DocumentationStateNotifier({
     required this._getAllDocumentation,
-    required GetDocumentation getDocumentation,
+required this._getDocumentation,
     required this._searchDocumentation,
-  }) : _getDocumentation = getDocumentation,
+  }) : _getDocumentation = _getDocumentation,
        super(const AsyncValue.loading());
 
   Future<void> loadAllDocumentation({

@@ -12,13 +12,21 @@ class MessagesScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       appBar: AppBar(
-        title: Text('Messages', style: AppTypography.section.copyWith(fontSize: 24)),
+        title: Text(
+          'Messages',
+          style: AppTypography.section.copyWith(fontSize: 24),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(icon: const Icon(LucideIcons.square_pen), onPressed: () {}),
+          IconButton(
+            icon: const Icon(LucideIcons.square_pen),
+            onPressed: () {},
+          ),
         ],
       ),
       body: ListView.builder(
@@ -37,13 +45,26 @@ class MessagesScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('John Doe', style: AppTypography.body.copyWith(fontWeight: FontWeight.w700)),
+                        Text(
+                          'John Doe',
+                          style: AppTypography.body.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                         const SizedBox(height: 4),
-                        Text('Hey, how is the project going?', style: AppTypography.tiny, maxLines: 1, overflow: TextOverflow.ellipsis),
+                        Text(
+                          'Hey, how is the project going?',
+                          style: AppTypography.tiny,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                     ),
                   ),
-                  Text('12:45', style: AppTypography.tiny.copyWith(fontSize: 10)),
+                  Text(
+                    '12:45',
+                    style: AppTypography.tiny.copyWith(fontSize: 10),
+                  ),
                 ],
               ),
             ),

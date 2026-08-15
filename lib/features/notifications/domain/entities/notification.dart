@@ -100,17 +100,17 @@ class Notification extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        recipientId,
-        senderId,
-        senderName,
-        senderAvatarUrl,
-        type,
-        entityId,
-        entityType,
-        isRead,
-        createdAt,
-      ];
+    id,
+    recipientId,
+    senderId,
+    senderName,
+    senderAvatarUrl,
+    type,
+    entityId,
+    entityType,
+    isRead,
+    createdAt,
+  ];
 
   Notification copyWith({
     String? id,

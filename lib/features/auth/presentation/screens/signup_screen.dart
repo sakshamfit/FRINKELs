@@ -37,7 +37,9 @@ class _SignupScreenState extends State<SignupScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundPrimary,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -45,32 +47,35 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const PremiumLogo(size: 60, hasGlow: false)
-                    .animate()
-                    .scale(duration: 400.ms),
-                
+                const PremiumLogo(
+                  size: 60,
+                  hasGlow: false,
+                ).animate().scale(duration: 400.ms),
+
                 const SizedBox(height: 32),
-                
+
                 Text(
                   'Create account',
                   style: AppTypography.title.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimary,
                     fontSize: 32,
                   ),
                   textAlign: TextAlign.center,
                 ).animate().fadeIn(delay: 100.ms),
-                
+
                 const SizedBox(height: 48),
-                
+
                 _SignupForm(
                   formKey: _formKey,
                   nameController: _nameController,
                   emailController: _emailController,
                   passwordController: _passwordController,
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 TextButton(
                   onPressed: () => context.go('${AppRouter.authPath}/login'),
                   child: Text(
@@ -118,9 +123,9 @@ class _SignupForm extends ConsumerWidget {
             hintText: 'John Doe',
             prefixIcon: const Icon(LucideIcons.user),
           ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1, end: 0),
-          
+
           const SizedBox(height: 16),
-          
+
           GlassTextField(
             controller: emailController,
             labelText: 'Email',
@@ -128,9 +133,9 @@ class _SignupForm extends ConsumerWidget {
             prefixIcon: const Icon(LucideIcons.mail),
             keyboardType: TextInputType.emailAddress,
           ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1, end: 0),
-          
+
           const SizedBox(height: 16),
-          
+
           GlassTextField(
             controller: passwordController,
             labelText: 'Password',
@@ -138,9 +143,9 @@ class _SignupForm extends ConsumerWidget {
             isPassword: true,
             prefixIcon: const Icon(LucideIcons.lock),
           ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.1, end: 0),
-          
+
           const SizedBox(height: 32),
-          
+
           FrinkelsButton.primary(
             width: double.infinity,
             text: 'Create Account',

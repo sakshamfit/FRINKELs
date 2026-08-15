@@ -8,10 +8,14 @@ abstract class HomeRemoteDataSource {
   Future<void> likePost(String postId);
   Future<void> unlikePost(String postId);
   Future<void> bookmarkPost(String postId);
-  
+
   // Profile methods
   Future<User> getProfile(String userId);
-  Future<List<User>> getNearbyProfessionals({double? latitude, double? longitude, double radiusKm = 10});
+  Future<List<User>> getNearbyProfessionals({
+    double? latitude,
+    double? longitude,
+    double radiusKm = 10,
+  });
   Future<List<User>> getTrendingProfessionals();
 }
 
@@ -20,21 +24,37 @@ class SupabaseHomeRemoteDataSource implements HomeRemoteDataSource {
 
   SupabaseHomeRemoteDataSource(this.supabaseClient);
 
-  User _mapSbUserToUser(Map<String, dynamic> data, String id, String email, String createdAt, {DateTime? emailConfirmedAt}) {
+  User _mapSbUserToUser(
+    Map<String, dynamic> data,
+    String id,
+    String email,
+    String createdAt, {
+    DateTime? emailConfirmedAt,
+  }) {
     return User(
       id: id,
       email: email,
       name: data['full_name'] as String?,
       username: data['username'] as String?,
       profession: data['profession'] as String?,
-      skills: (data['skills'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      interests: (data['interests'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      skills:
+          (data['skills'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      interests:
+          (data['interests'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       bio: data['bio'] as String?,
       location: data['location'] as String?,
       availability: data['availability'] as String?,
       avatarUrl: data['avatar_url'] as String?,
       coverUrl: data['cover_url'] as String?,
-      emailVerified: emailConfirmedAt != null || (data['email_verified'] as bool? ?? false),
+      emailVerified:
+          emailConfirmedAt != null ||
+          (data['email_verified'] as bool? ?? false),
       isOnboarded: data['is_onboarded'] as bool? ?? false,
       createdAt: DateTime.parse(createdAt),
     );
@@ -47,20 +67,34 @@ class SupabaseHomeRemoteDataSource implements HomeRemoteDataSource {
         .select('*')
         .eq('id', userId)
         .single();
-    
-    return _mapSbUserToUser(response, response['id'], response['email'] ?? '', response['created_at']);
+
+    return _mapSbUserToUser(
+      response,
+      response['id'],
+      response['email'] ?? '',
+      response['created_at'],
+    );
   }
 
   @override
-  Future<List<User>> getNearbyProfessionals({double? latitude, double? longitude, double radiusKm = 10}) async {
+  Future<List<User>> getNearbyProfessionals({
+    double? latitude,
+    double? longitude,
+    double radiusKm = 10,
+  }) async {
     final response = await supabaseClient
         .from('profiles')
         .select('*')
         .eq('is_onboarded', true)
         .limit(10);
-    
+
     final List<dynamic> data = response as List<dynamic>;
-    return data.map((u) => _mapSbUserToUser(u, u['id'], u['email'] ?? '', u['created_at'])).toList();
+    return data
+        .map(
+          (u) =>
+              _mapSbUserToUser(u, u['id'], u['email'] ?? '', u['created_at']),
+        )
+        .toList();
   }
 
   @override
@@ -71,9 +105,14 @@ class SupabaseHomeRemoteDataSource implements HomeRemoteDataSource {
         .eq('is_onboarded', true)
         .order('rating', ascending: false)
         .limit(10);
-    
+
     final List<dynamic> data = response as List<dynamic>;
-    return data.map((u) => _mapSbUserToUser(u, u['id'], u['email'] ?? '', u['created_at'])).toList();
+    return data
+        .map(
+          (u) =>
+              _mapSbUserToUser(u, u['id'], u['email'] ?? '', u['created_at']),
+        )
+        .toList();
   }
 
   @override
@@ -93,7 +132,11 @@ class SupabaseHomeRemoteDataSource implements HomeRemoteDataSource {
         authorName: profile['full_name'] as String? ?? 'Anonymous',
         authorAvatarUrl: profile['avatar_url'] as String?,
         content: post['content'] as String,
-        imageUrls: (post['image_urls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+        imageUrls:
+            (post['image_urls'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
         createdAt: DateTime.parse(post['created_at'] as String),
       );
     }).toList();
@@ -119,7 +162,11 @@ class SupabaseHomeRemoteDataSource implements HomeRemoteDataSource {
       authorName: profile['full_name'] as String? ?? 'Anonymous',
       authorAvatarUrl: profile['avatar_url'] as String?,
       content: response['content'] as String,
-      imageUrls: (response['image_urls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      imageUrls:
+          (response['image_urls'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       createdAt: DateTime.parse(response['created_at'] as String),
     );
   }

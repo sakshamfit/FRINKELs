@@ -67,10 +67,15 @@ class ProfileRemoteDataSource {
         throw Exception('User not authenticated');
       }
 
-      final fileName = 'profile_pics/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      await _supabase.storage.from('profile_photos').upload(fileName, File(filePath));
+      final fileName =
+          'profile_pics/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await _supabase.storage
+          .from('profile_photos')
+          .upload(fileName, File(filePath));
 
-      final publicUrl = _supabase.storage.from('profile_photos').getPublicUrl(fileName);
+      final publicUrl = _supabase.storage
+          .from('profile_photos')
+          .getPublicUrl(fileName);
 
       await _supabase
           .from('profiles')
@@ -88,10 +93,15 @@ class ProfileRemoteDataSource {
         throw Exception('User not authenticated');
       }
 
-      final fileName = 'cover_photos/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      await _supabase.storage.from('cover_photos').upload(fileName, File(filePath));
+      final fileName =
+          'cover_photos/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await _supabase.storage
+          .from('cover_photos')
+          .upload(fileName, File(filePath));
 
-      final publicUrl = _supabase.storage.from('cover_photos').getPublicUrl(fileName);
+      final publicUrl = _supabase.storage
+          .from('cover_photos')
+          .getPublicUrl(fileName);
 
       await _supabase
           .from('profiles')
@@ -185,10 +195,10 @@ class ProfileRemoteDataSource {
   }
 
   Future<List<Profile>> getFollowers(
-      String userId, {
-      int limit = 20,
-      int offset = 0,
-    }) async {
+    String userId, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
     try {
       final response = await _supabase
           .from('follows')
@@ -207,10 +217,10 @@ class ProfileRemoteDataSource {
   }
 
   Future<List<Profile>> getFollowing(
-      String userId, {
-      int limit = 20,
-      int offset = 0,
-    }) async {
+    String userId, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
     try {
       final response = await _supabase
           .from('follows')
@@ -258,10 +268,10 @@ class ProfileRemoteDataSource {
         return data.map((profile) => Profile.fromJson(profile)).toList();
       }
 
-      final response = await _supabase.rpc('get_suggested_profiles', params: {
-        'user_id': userId,
-        'limit': limit,
-      });
+      final response = await _supabase.rpc(
+        'get_suggested_profiles',
+        params: {'user_id': userId, 'limit': limit},
+      );
 
       final List<dynamic> data = response;
       return data.map((profile) => Profile.fromJson(profile)).toList();
@@ -282,13 +292,16 @@ class ProfileRemoteDataSource {
         throw Exception('User not authenticated');
       }
 
-      final response = await _supabase.rpc('get_nearby_profiles', params: {
-        'user_id': userId,
-        'latitude': latitude,
-        'longitude': longitude,
-        'radius_km': radiusKm,
-        'limit': limit,
-      });
+      final response = await _supabase.rpc(
+        'get_nearby_profiles',
+        params: {
+          'user_id': userId,
+          'latitude': latitude,
+          'longitude': longitude,
+          'radius_km': radiusKm,
+          'limit': limit,
+        },
+      );
 
       final List<dynamic> data = response;
       return data.map((profile) => Profile.fromJson(profile)).toList();

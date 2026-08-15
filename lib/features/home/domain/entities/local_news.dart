@@ -28,17 +28,17 @@ class LocalNews extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        description,
-        imageUrl,
-        source,
-        author,
-        publishedAt,
-        category,
-        location,
-        isTrending,
-      ];
+    id,
+    title,
+    description,
+    imageUrl,
+    source,
+    author,
+    publishedAt,
+    category,
+    location,
+    isTrending,
+  ];
 
   LocalNews copyWith({
     String? id,

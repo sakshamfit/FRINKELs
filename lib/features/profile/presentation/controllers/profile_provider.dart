@@ -7,7 +7,9 @@ import '../../data/datasources/profile_remote_data_source.dart';
 import '../../../auth/presentation/controllers/auth_provider.dart';
 
 // Remote data source provider
-final profileRemoteDataSourceProvider = Provider<ProfileRemoteDataSource>((ref) {
+final profileRemoteDataSourceProvider = Provider<ProfileRemoteDataSource>((
+  ref,
+) {
   final supabase = ref.watch(supabaseProvider);
   return ProfileRemoteDataSource(supabase);
 });
@@ -20,52 +22,60 @@ final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
 
 // State provider for user profile data
 final userProfileProvider =
-    StateNotifierProviderFamily<UserProfileNotifier, AsyncValue<UserProfile?>, String>(
-  (ref, userId) {
-    final repository = ref.watch(profileRepositoryProvider);
-    return UserProfileNotifier(repository, userId);
-  },
-);
+    StateNotifierProviderFamily<
+      UserProfileNotifier,
+      AsyncValue<UserProfile?>,
+      String
+    >((ref, userId) {
+      final repository = ref.watch(profileRepositoryProvider);
+      return UserProfileNotifier(repository, userId);
+    });
 
 // State provider for profile list (for search, suggestions, etc.)
 final profilesProvider =
-    StateNotifierProvider<ProfilesNotifier, AsyncValue<List<Profile>>>(
-  (ref) {
-    final repository = ref.watch(profileRepositoryProvider);
-    return ProfilesNotifier(repository);
-  },
-);
+    StateNotifierProvider<ProfilesNotifier, AsyncValue<List<Profile>>>((ref) {
+      final repository = ref.watch(profileRepositoryProvider);
+      return ProfilesNotifier(repository);
+    });
 
 // State provider for follow/unfollow actions
 final followProvider =
-    StateNotifierProviderFamily<FollowNotifier, AsyncValue<bool>, String>((ref, userId) {
-  final repository = ref.watch(profileRepositoryProvider);
-  return FollowNotifier(repository, userId);
-});
+    StateNotifierProviderFamily<FollowNotifier, AsyncValue<bool>, String>((
+      ref,
+      userId,
+    ) {
+      final repository = ref.watch(profileRepositoryProvider);
+      return FollowNotifier(repository, userId);
+    });
 
 // State provider for follower/following lists
 final followersProvider =
-    StateNotifierProviderFamily<FollowersNotifier, AsyncValue<List<Profile>>, String>(
-  (ref, userId) {
-    final repository = ref.watch(profileRepositoryProvider);
-    return FollowersNotifier(repository, userId);
-  },
-);
+    StateNotifierProviderFamily<
+      FollowersNotifier,
+      AsyncValue<List<Profile>>,
+      String
+    >((ref, userId) {
+      final repository = ref.watch(profileRepositoryProvider);
+      return FollowersNotifier(repository, userId);
+    });
 
 final followingProvider =
-    StateNotifierProviderFamily<FollowingNotifier, AsyncValue<List<Profile>>, String>(
-  (ref, userId) {
-    final repository = ref.watch(profileRepositoryProvider);
-    return FollowingNotifier(repository, userId);
-  },
-);
+    StateNotifierProviderFamily<
+      FollowingNotifier,
+      AsyncValue<List<Profile>>,
+      String
+    >((ref, userId) {
+      final repository = ref.watch(profileRepositoryProvider);
+      return FollowingNotifier(repository, userId);
+    });
 
 // StateNotifier for user profile data
 class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
   final ProfileRepository _repository;
   final String _userId;
 
-  UserProfileNotifier(this._repository, this._userId) : super(const AsyncLoading()) {
+  UserProfileNotifier(this._repository, this._userId)
+    : super(const AsyncLoading()) {
     loadUserProfile();
   }
 
@@ -150,7 +160,8 @@ class FollowNotifier extends StateNotifier<AsyncValue<bool>> {
   final ProfileRepository _repository;
   final String _targetUserId;
 
-  FollowNotifier(this._repository, this._targetUserId) : super(const AsyncLoading()) {
+  FollowNotifier(this._repository, this._targetUserId)
+    : super(const AsyncLoading()) {
     checkFollowStatus();
   }
 
@@ -187,13 +198,18 @@ class FollowersNotifier extends StateNotifier<AsyncValue<List<Profile>>> {
   final ProfileRepository _repository;
   final String _userId;
 
-  FollowersNotifier(this._repository, this._userId) : super(const AsyncLoading()) {
+  FollowersNotifier(this._repository, this._userId)
+    : super(const AsyncLoading()) {
     loadFollowers();
   }
 
   Future<void> loadFollowers({int limit = 20, int offset = 0}) async {
     state = const AsyncLoading();
-    final result = await _repository.getFollowers(_userId, limit: limit, offset: offset);
+    final result = await _repository.getFollowers(
+      _userId,
+      limit: limit,
+      offset: offset,
+    );
     result.fold(
       (failure) => state = AsyncError(failure, StackTrace.current),
       (followers) => state = AsyncData(followers),
@@ -205,8 +221,12 @@ class FollowersNotifier extends StateNotifier<AsyncValue<List<Profile>>> {
 
     final currentState = state.value!;
     final currentOffset = currentState.length;
-    
-    final result = await _repository.getFollowers(_userId, limit: limit, offset: currentOffset);
+
+    final result = await _repository.getFollowers(
+      _userId,
+      limit: limit,
+      offset: currentOffset,
+    );
     result.fold(
       (failure) => state = AsyncError(failure, StackTrace.current),
       (moreFollowers) => state = AsyncData([...currentState, ...moreFollowers]),
@@ -223,13 +243,18 @@ class FollowingNotifier extends StateNotifier<AsyncValue<List<Profile>>> {
   final ProfileRepository _repository;
   final String _userId;
 
-  FollowingNotifier(this._repository, this._userId) : super(const AsyncLoading()) {
+  FollowingNotifier(this._repository, this._userId)
+    : super(const AsyncLoading()) {
     loadFollowing();
   }
 
   Future<void> loadFollowing({int limit = 20, int offset = 0}) async {
     state = const AsyncLoading();
-    final result = await _repository.getFollowing(_userId, limit: limit, offset: offset);
+    final result = await _repository.getFollowing(
+      _userId,
+      limit: limit,
+      offset: offset,
+    );
     result.fold(
       (failure) => state = AsyncError(failure, StackTrace.current),
       (following) => state = AsyncData(following),
@@ -242,7 +267,11 @@ class FollowingNotifier extends StateNotifier<AsyncValue<List<Profile>>> {
     final currentState = state.value!;
     final currentOffset = currentState.length;
 
-    final result = await _repository.getFollowing(_userId, limit: limit, offset: currentOffset);
+    final result = await _repository.getFollowing(
+      _userId,
+      limit: limit,
+      offset: currentOffset,
+    );
     result.fold(
       (failure) => state = AsyncError(failure, StackTrace.current),
       (moreFollowing) => state = AsyncData([...currentState, ...moreFollowing]),

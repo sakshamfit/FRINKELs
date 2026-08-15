@@ -4,9 +4,12 @@ import '../../domain/entities/business.dart';
 import '../../domain/repositories/feed_repository.dart';
 import 'home_provider.dart';
 
-final businessesProvider = StateNotifierProvider<BusinessesNotifier, AsyncValue<List<Business>>>((ref) {
-  return BusinessesNotifier(ref.read(feedRepositoryProvider));
-});
+final businessesProvider =
+    StateNotifierProvider<BusinessesNotifier, AsyncValue<List<Business>>>((
+      ref,
+    ) {
+      return BusinessesNotifier(ref.read(feedRepositoryProvider));
+    });
 
 class BusinessesNotifier extends StateNotifier<AsyncValue<List<Business>>> {
   final FeedRepository _repository;
@@ -19,9 +22,13 @@ class BusinessesNotifier extends StateNotifier<AsyncValue<List<Business>>> {
   Future<void> loadBusinesses({String? category, double? minRating}) async {
     state = const AsyncValue.loading();
     try {
-      final result = await _repository.getBusinesses(category: category, minRating: minRating);
+      final result = await _repository.getBusinesses(
+        category: category,
+        minRating: minRating,
+      );
       result.fold(
-        (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+        (failure) =>
+            state = AsyncValue.error(failure.message, StackTrace.current),
         (businesses) => state = AsyncValue.data(businesses),
       );
     } catch (e, stackTrace) {

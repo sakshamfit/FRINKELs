@@ -5,10 +5,7 @@ import '../theme/app_colors.dart';
 class GlowingLoader extends StatelessWidget {
   final double size;
 
-  const GlowingLoader({
-    super.key,
-    this.size = 48,
-  });
+  const GlowingLoader({super.key, this.size = 48});
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +25,13 @@ class GlowingLoader extends StatelessWidget {
               ),
             ),
             CircularProgressIndicator(
-              strokeWidth: 4,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
-            ).animate(onPlay: (controller) => controller.repeat()).rotate(duration: 1.seconds),
+                  strokeWidth: 4,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.accent,
+                  ),
+                )
+                .animate(onPlay: (controller) => controller.repeat())
+                .rotate(duration: 1.seconds),
           ],
         ),
       ),

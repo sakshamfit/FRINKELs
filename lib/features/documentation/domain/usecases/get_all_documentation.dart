@@ -11,9 +11,8 @@ class GetAllDocumentation {
   Future<Either<Failure, List<Documentation>>> call({
     String? category,
     bool? isPublished,
-  }) =>
-      repository.getAllDocumentation(
-        category: category,
-        isPublished: isPublished,
-      );
+  }) => repository.getAllDocumentation(
+    category: category,
+    isPublished: isPublished,
+  );
 }
